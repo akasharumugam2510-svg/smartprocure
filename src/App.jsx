@@ -79,7 +79,16 @@ function Login({ onLogin }) {
           </p>
         </div>
 
-        <h2 style={{ marginBottom: "20px" }}>Login</h2>
+       <h2
+  style={{
+    marginBottom: "20px",
+    color: "#087a3d",
+    fontWeight: "800",
+    fontSize: "28px"
+  }}
+>
+  Login
+</h2>
 
         <label>Mobile Number</label>
 
@@ -1020,67 +1029,88 @@ function Payments() {
 ========================================================= */
 
 function More({ onLogout }) {
-  const options = [
-    ["👤", "My Profile"],
-    ["🌾", "My Farm Details"],
-    ["📄", "Documents"],
-    ["🔔", "Notifications"],
-    ["❓", "Help & Support"],
-    ["⚙️", "Settings"],
-  ];
-
   return (
-    <div className="page-container">
-      <div className="page-heading">
+    <div className="more-page">
+
+      <div className="page-title">
         <h1>More</h1>
-        <p>Account and application settings.</p>
+        <p>Account and application settings</p>
       </div>
 
-      {options.map(([icon, title]) => (
-        <button
-          key={title}
-          style={{
-            width: "100%",
-            padding: "17px",
-            background: "white",
-            border: "1px solid #eee",
-            borderRadius: "12px",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            gap: "15px",
-            cursor: "pointer",
-            textAlign: "left",
-          }}
-        >
-          <span style={{ fontSize: "22px" }}>{icon}</span>
+      <div className="more-menu">
 
-          <strong>{title}</strong>
-
-          <span style={{ marginLeft: "auto" }}>›</span>
+        <button className="more-item">
+          <span className="more-icon">👤</span>
+          <div>
+            <h3>My Profile</h3>
+            <p>View and edit your farmer profile</p>
+          </div>
+          <span className="arrow">›</span>
         </button>
-      ))}
 
-      <button
-        onClick={onLogout}
-        style={{
-          width: "100%",
-          marginTop: "25px",
-          padding: "14px",
-          borderRadius: "10px",
-          border: "1px solid #d32f2f",
-          color: "#d32f2f",
-          background: "white",
-          cursor: "pointer",
-          fontWeight: "bold",
-        }}
-      >
+        <button className="more-item">
+          <span className="more-icon">⚙️</span>
+          <div>
+            <h3>Settings</h3>
+            <p>Manage your application settings</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+        <button className="more-item">
+          <span className="more-icon">📊</span>
+          <div>
+            <h3>Dashboard</h3>
+            <p>View procurement activity and statistics</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+        <button className="more-item">
+          <span className="more-icon">📄</span>
+          <div>
+            <h3>Documents</h3>
+            <p>View your procurement documents</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+        <button className="more-item">
+          <span className="more-icon">🔔</span>
+          <div>
+            <h3>Notifications</h3>
+            <p>View important alerts and updates</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+        <button className="more-item">
+          <span className="more-icon">❓</span>
+          <div>
+            <h3>Help & Support</h3>
+            <p>Get help with SmartProcure</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+        <button className="more-item">
+          <span className="more-icon">🌐</span>
+          <div>
+            <h3>Language</h3>
+            <p>Choose your preferred language</p>
+          </div>
+          <span className="arrow">›</span>
+        </button>
+
+      </div>
+
+      <button className="logout-button" onClick={onLogout}>
         🚪 Logout
       </button>
+
     </div>
   );
 }
-
 /* =========================================================
    PROCUREMENT CENTRE DASHBOARD
 ========================================================= */
