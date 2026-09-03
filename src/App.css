@@ -1,0 +1,687 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f8f5;
+  color: #17231c;
+}
+
+.app {
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.topbar {
+  height: 72px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid #e2e8e3;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #e4f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.logo h2 {
+  color: #087a3d;
+  font-size: 21px;
+}
+
+.logo p {
+  color: #777;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.notification {
+  border: none;
+  background: #f2f5f3;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.content {
+  max-width: 900px;
+  margin: auto;
+  padding: 28px 22px;
+}
+
+.page-content {
+  padding-bottom: 20px;
+}
+
+.page-content > h1 {
+  margin-bottom: 8px;
+}
+
+.page-content > p {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+.welcome p {
+  color: #087a3d;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.welcome h1 {
+  font-size: 27px;
+  margin-bottom: 22px;
+}
+
+/* =========================
+   STATUS CARD
+========================= */
+
+.status-card {
+  background: linear-gradient(135deg, #07863f, #12a653);
+  color: white;
+  border-radius: 20px;
+  padding: 25px;
+  min-height: 185px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 120, 55, 0.18);
+}
+
+.status-card p {
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.status-card h2 {
+  font-size: 31px;
+  margin: 8px 0 2px;
+}
+
+.status-card span {
+  font-size: 13px;
+}
+
+.token {
+  margin-top: 18px;
+}
+
+.token small {
+  display: block;
+  opacity: 0.8;
+}
+
+.token strong {
+  font-size: 22px;
+}
+
+.farmer-image {
+  font-size: 95px;
+}
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.action-card {
+  background: white;
+  border: 1px solid #e4eae5;
+  border-radius: 15px;
+  padding: 17px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.action-icon {
+  font-size: 25px;
+  margin-bottom: 9px;
+}
+
+.action-card strong {
+  display: block;
+  font-size: 13px;
+}
+
+.action-card span {
+  display: block;
+  font-size: 10px;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.section {
+  margin-top: 25px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-title h2 {
+  font-size: 19px;
+}
+
+.section-title h3 {
+  font-size: 17px;
+}
+
+.section-title span {
+  color: #087a3d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* =========================
+   BOOKING CARD
+========================= */
+
+.booking-card {
+  background: white;
+  border: 1px solid #e2e8e3;
+  border-radius: 17px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.booking-card h2 {
+  margin-bottom: 18px;
+}
+
+.booking-card h3 {
+  margin-bottom: 8px;
+}
+
+.booking-card p {
+  margin: 10px 0;
+  color: #555;
+}
+
+.booking-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 17px;
+  margin-bottom: 17px;
+  border-bottom: 1px solid #edf0ed;
+}
+
+.booking-row div {
+  flex: 1;
+}
+
+.booking-row small {
+  display: block;
+  color: #888;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.booking-row strong {
+  font-size: 14px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.primary-button {
+  width: 100%;
+  background: #07863f;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.primary-button:hover {
+  background: #066d34;
+}
+
+.secondary-button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border: 1px solid #07833d;
+  border-radius: 8px;
+  background: white;
+  color: #07833d;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.secondary-button:hover {
+  background: #effaf2;
+}
+
+/* =========================
+   AI
+========================= */
+
+.ai-card {
+  margin-top: 22px;
+  background: #eef9f1;
+  border: 1px solid #ccebd5;
+  border-radius: 17px;
+  padding: 20px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.ai-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.ai-card p {
+  color: #087a3d;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ai-card h3 {
+  margin: 4px 0;
+}
+
+.ai-card strong {
+  display: block;
+  color: #087a3d;
+  font-size: 14px;
+}
+
+.ai-card span {
+  display: block;
+  color: #777;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* =========================
+   ACTIVITY
+========================= */
+
+.activity {
+  background: white;
+  border: 1px solid #e4eae5;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.activity:first-of-type {
+  border-radius: 15px 15px 0 0;
+}
+
+.activity:last-child {
+  border-radius: 0 0 15px 15px;
+}
+
+.activity-icon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #e5f7eb;
+  color: #087a3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity strong {
+  font-size: 13px;
+}
+
+.activity p {
+  font-size: 11px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.activity small {
+  margin-left: auto;
+  color: #888;
+  font-size: 10px;
+}
+
+/* =========================
+   BOOKING FORM
+========================= */
+
+.form-card {
+  background: white;
+  border: 1px solid #dce5df;
+  border-radius: 18px;
+  padding: 30px;
+  margin-top: 25px;
+}
+
+.form-card label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #244b35;
+}
+
+.form-card label:first-child {
+  margin-top: 0;
+}
+
+.form-card select,
+.form-card input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d4ded8;
+  border-radius: 9px;
+  background: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-card select:focus,
+.form-card input:focus {
+  border-color: #07863f;
+  box-shadow: 0 0 0 3px rgba(7, 134, 63, 0.08);
+}
+
+/* AI inside form */
+
+.form-card .ai-card {
+  margin: 25px 0;
+}
+
+/* =========================
+   CONFIRMATION
+========================= */
+
+.confirmation-card {
+  background: white;
+  border: 1px solid #dce5df;
+  border-radius: 20px;
+  padding: 35px;
+  margin-top: 25px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 65px;
+  height: 65px;
+  margin: auto;
+  border-radius: 50%;
+  background: #e3f7e9;
+  color: #07833d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.confirmation-card h2 {
+  color: #07833d;
+  margin-top: 15px;
+}
+
+.confirmation-card > p {
+  color: #888;
+  margin-top: 8px;
+}
+
+/* =========================
+   TOKEN
+========================= */
+
+.token-display {
+  background: #effaf2;
+  border: 1px solid #c8e8d1;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 25px 0;
+}
+
+.token-display small {
+  display: block;
+  color: #777;
+}
+
+.token-display strong {
+  display: block;
+  font-size: 42px;
+  color: #07833d;
+  margin-top: 5px;
+}
+
+/* =========================
+   CONFIRMATION DETAILS
+========================= */
+
+.confirmation-details {
+  border-top: 1px solid #e5ebe7;
+  border-bottom: 1px solid #e5ebe7;
+  padding: 15px 0;
+  margin-bottom: 20px;
+}
+
+.confirmation-details p {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.confirmation-details span {
+  color: #666;
+}
+
+/* =========================
+   QUEUE PAGE
+========================= */
+
+.queue-info {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.queue-box {
+  flex: 1;
+  background: #f4f8f5;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.queue-box small {
+  display: block;
+  color: #777;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.queue-box strong {
+  display: block;
+  font-size: 28px;
+  color: #087f3d;
+}
+
+/* =========================
+   MORE PAGE
+========================= */
+
+.more-option {
+  padding: 18px 5px;
+  border-bottom: 1px solid #edf0ed;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.more-option:last-child {
+  border-bottom: none;
+}
+
+.more-option:hover {
+  color: #07863f;
+}
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background: white;
+  border-top: 1px solid #e0e6e1;
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+  align-items: center;
+  z-index: 20;
+}
+
+.nav-item {
+  text-align: center;
+  color: #777;
+  cursor: pointer;
+  min-width: 50px;
+}
+
+.nav-item span {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 3px;
+}
+
+.nav-item small {
+  font-size: 10px;
+}
+
+.nav-item.active {
+  color: #07863f;
+  font-weight: bold;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+
+  .content {
+    padding: 20px 15px;
+  }
+
+  .topbar {
+    padding: 0 15px;
+  }
+
+  .welcome h1 {
+    font-size: 23px;
+  }
+
+  .status-card {
+    padding: 20px;
+  }
+
+  .farmer-image {
+    font-size: 70px;
+  }
+
+  .quick-actions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .bottom-nav {
+    gap: 0;
+    justify-content: space-around;
+  }
+
+  .booking-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .form-card {
+    padding: 20px;
+  }
+
+  .confirmation-card {
+    padding: 25px 18px;
+  }
+
+  .queue-info {
+    flex-direction: column;
+  }
+
+  .queue-box {
+    width: 100%;
+  }
+}
