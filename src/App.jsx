@@ -1,29 +1,162 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 /* =========================================================
-   LOGIN PAGE
+   LOGIN / REGISTER PAGE
 ========================================================= */
 
 function Login({ onLogin }) {
+  const [isRegister, setIsRegister] = useState(false);
+
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleLogin = () => {
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [district, setDistrict] = useState("");
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  /* =======================================================
+     LOGIN
+  ======================================================= */
+
+  const handleLogin = async () => {
+    setError("");
+    setSuccess("");
+
     if (!mobile || !password) {
       setError("Please enter mobile number and password.");
       return;
     }
 
-    if (mobile !== "9876543210" || password !== "1234") {
-      setError("Invalid login details. Use the demo credentials.");
+    if (mobile.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number.");
       return;
     }
 
-    setError("");
-    onLogin();
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/farmers/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mobile,
+            password,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data.message || "Invalid mobile number or password."
+        );
+        return;
+      }
+
+      setError("");
+
+      /*
+        Login successful.
+
+      */
+
+      onLogin(data.farmer);
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("Unable to connect to server.");
+    }
   };
+
+  /* =======================================================
+     REGISTER
+  ======================================================= */
+
+  const handleRegister = async () => {
+    setError("");
+    setSuccess("");
+
+    if (
+      !name ||
+      !mobile ||
+      !password ||
+      !city ||
+      !district
+    ) {
+      setError("Please fill all registration details.");
+      return;
+    }
+
+    if (mobile.length !== 10) {
+      setError("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    if (password.length < 4) {
+      setError("Password must contain at least 4 characters.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/farmers/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            mobile,
+            password,
+
+            // Your MySQL table uses "village"
+            village: city,
+
+            district,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data.message || "Registration failed."
+        );
+        return;
+      }
+
+      setError("");
+
+      setSuccess(
+        "Account created successfully. You can now login."
+      );
+
+      // Clear registration fields
+      setName("");
+      setCity("");
+      setDistrict("");
+      setPassword("");
+      setMobile("");
+
+      // Return to login
+      setIsRegister(false);
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("Unable to connect to server.");
+    }
+  };
+
+  /* =======================================================
+     LOGIN / REGISTER UI
+  ======================================================= */
 
   return (
     <div
@@ -34,6 +167,7 @@ function Login({ onLogin }) {
         alignItems: "center",
         background: "#f3f8f1",
         padding: "20px",
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -44,9 +178,17 @@ function Login({ onLogin }) {
           borderRadius: "20px",
           padding: "32px",
           boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+          boxSizing: "border-box",
         }}
       >
-        <div style={{ textAlign: "center", marginBottom: "28px" }}>
+        {/* LOGO */}
+
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "28px",
+          }}
+        >
           <div
             style={{
               width: "70px",
@@ -74,64 +216,133 @@ function Login({ onLogin }) {
             SmartProcure
           </h1>
 
-          <p style={{ color: "#666", marginTop: "8px" }}>
+          <p
+            style={{
+              color: "#666",
+              marginTop: "8px",
+            }}
+          >
             Smart Agricultural Procurement System
           </p>
         </div>
 
-       <h2
-  style={{
-    marginBottom: "20px",
-    color: "#087a3d",
-    fontWeight: "800",
-    fontSize: "28px"
-  }}
->
-  Login
-</h2>
+        {/* TITLE */}
+
+        <h2
+          style={{
+            marginBottom: "20px",
+            color: "#087a3d",
+            fontWeight: "800",
+            fontSize: "28px",
+          }}
+        >
+          {isRegister ? "Create Account" : "Login"}
+        </h2>
+
+        {/* REGISTER FIELDS */}
+
+        {isRegister && (
+          <>
+            <label>Full Name</label>
+
+            <input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={inputStyle}
+            />
+
+            <label>City / Village</label>
+
+            <input
+              type="text"
+              placeholder="Enter City / Village"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              style={inputStyle}
+            />
+
+            <label>District</label>
+
+            <input
+              type="text"
+              placeholder="Enter district"
+              value={district}
+              onChange={(e) => setDistrict(e.target.value)}
+              style={inputStyle}
+            />
+          </>
+        )}
+
+        {/* MOBILE */}
 
         <label>Mobile Number</label>
 
         <input
-          type="text"
-          placeholder="Enter mobile number"
+          type="tel"
+          placeholder="Enter 10-digit mobile number"
           value={mobile}
-          onChange={(e) => setMobile(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "13px",
-            marginTop: "7px",
-            marginBottom: "15px",
-            border: "1px solid #ccc",
-            borderRadius: "10px",
-            boxSizing: "border-box",
+          maxLength="10"
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, "");
+            setMobile(value);
           }}
+          style={inputStyle}
         />
+
+        {/* PASSWORD */}
 
         <label>Password</label>
 
         <input
           type="password"
-          placeholder="Enter password"
+          placeholder={
+            isRegister
+              ? "Create password"
+              : "Enter password"
+          }
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "13px",
-            marginTop: "7px",
-            marginBottom: "15px",
-            border: "1px solid #ccc",
-            borderRadius: "10px",
-            boxSizing: "border-box",
-          }}
+          style={inputStyle}
         />
 
+        {/* ERROR */}
+
         {error && (
-          <p style={{ color: "#d32f2f", fontSize: "14px" }}>{error}</p>
+          <p
+            style={{
+              color: "#d32f2f",
+              fontSize: "14px",
+              marginTop: "5px",
+            }}
+          >
+            {error}
+          </p>
         )}
 
+        {/* SUCCESS */}
+
+        {success && (
+          <p
+            style={{
+              color: "#16833a",
+              fontSize: "14px",
+              marginTop: "5px",
+            }}
+          >
+            {success}
+          </p>
+        )}
+
+        {/* MAIN BUTTON */}
+
         <button
-          onClick={handleLogin}
+          onClick={
+            isRegister
+              ? handleRegister
+              : handleLogin
+          }
           className="primary-button"
           style={{
             width: "100%",
@@ -142,29 +353,52 @@ function Login({ onLogin }) {
             cursor: "pointer",
           }}
         >
-          Login
+          {isRegister
+            ? "Create Account"
+            : "Login"}
         </button>
 
-        <div
+        {/* SWITCH */}
+
+        <button
+          onClick={() => {
+            setIsRegister(!isRegister);
+            setError("");
+            setSuccess("");
+          }}
           style={{
-            marginTop: "20px",
+            width: "100%",
+            marginTop: "12px",
             padding: "12px",
-            background: "#f1f8e9",
-            borderRadius: "10px",
-            fontSize: "13px",
-            color: "#555",
+            border: "none",
+            background: "transparent",
+            color: "#087a3d",
+            fontWeight: "700",
+            cursor: "pointer",
           }}
         >
-          <strong>Demo Login</strong>
-          <br />
-          Mobile: 9876543210
-          <br />
-          Password: 1234
-        </div>
+          {isRegister
+            ? "Already have an account? Login"
+            : "New farmer? Create Account"}
+        </button>
       </div>
     </div>
   );
 }
+
+/* =========================================================
+   COMMON INPUT STYLE
+========================================================= */
+
+const inputStyle = {
+  width: "100%",
+  padding: "13px",
+  marginTop: "7px",
+  marginBottom: "15px",
+  border: "1px solid #ccc",
+  borderRadius: "10px",
+  boxSizing: "border-box",
+};
 
 /* =========================================================
    ROLE SELECTION
@@ -176,19 +410,22 @@ function RoleSelection({ onSelectRole, onBack }) {
       id: "farmer",
       icon: "👨‍🌾",
       title: "Farmer",
-      description: "Book procurement slots and track your produce.",
+      description:
+        "Book procurement slots and track your produce.",
     },
     {
       id: "centre",
       icon: "🏢",
       title: "Procurement Centre",
-      description: "Manage farmers, queues and procurement.",
+      description:
+        "Manage farmers, queues and procurement.",
     },
     {
       id: "admin",
       icon: "📊",
       title: "District Admin",
-      description: "Monitor district-wide procurement operations.",
+      description:
+        "Monitor district-wide procurement operations.",
     },
   ];
 
@@ -219,8 +456,15 @@ function RoleSelection({ onSelectRole, onBack }) {
           ← Back
         </button>
 
-        <div style={{ textAlign: "center", marginBottom: "35px" }}>
-          <h1 style={{ color: "#246b2a" }}>Welcome to SmartProcure</h1>
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: "35px",
+          }}
+        >
+          <h1 style={{ color: "#246b2a" }}>
+            Welcome to SmartProcure
+          </h1>
 
           <p style={{ color: "#666" }}>
             Select your role to continue
@@ -230,7 +474,8 @@ function RoleSelection({ onSelectRole, onBack }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(230px, 1fr))",
             gap: "20px",
           }}
         >
@@ -245,18 +490,34 @@ function RoleSelection({ onSelectRole, onBack }) {
                 padding: "28px 20px",
                 textAlign: "center",
                 cursor: "pointer",
-                boxShadow: "0 5px 20px rgba(0,0,0,0.06)",
+                boxShadow:
+                  "0 5px 20px rgba(0,0,0,0.06)",
               }}
             >
-              <div style={{ fontSize: "45px", marginBottom: "15px" }}>
+              <div
+                style={{
+                  fontSize: "45px",
+                  marginBottom: "15px",
+                }}
+              >
                 {role.icon}
               </div>
 
-              <h2 style={{ margin: "5px 0", color: "#246b2a" }}>
+              <h2
+                style={{
+                  margin: "5px 0",
+                  color: "#246b2a",
+                }}
+              >
                 {role.title}
               </h2>
 
-              <p style={{ color: "#666", lineHeight: "1.5" }}>
+              <p
+                style={{
+                  color: "#666",
+                  lineHeight: "1.5",
+                }}
+              >
                 {role.description}
               </p>
 
@@ -281,16 +542,21 @@ function RoleSelection({ onSelectRole, onBack }) {
    FARMER HOME
 ========================================================= */
 
-function Home({ booking, setPage }) {
+function Home({ booking, setPage, farmer }) {
   return (
     <div className="page-container">
       <div className="welcome-section">
-        <p className="small-text">Good morning 👋</p>
+        <p className="small-text">
+          Good morning 👋
+        </p>
 
-        <h1>Welcome, Farmer</h1>
+        <h1>
+          Welcome, {farmer?.name || "Farmer"} 👋
+        </h1>
 
         <p className="muted-text">
-          Manage your procurement easily with SmartProcure.
+          Manage your procurement easily with
+          SmartProcure.
         </p>
       </div>
 
@@ -311,9 +577,18 @@ function Home({ booking, setPage }) {
           }}
         >
           <div>
-            <p style={{ margin: 0, opacity: 0.8 }}>Current Booking</p>
+            <p
+              style={{
+                margin: 0,
+                opacity: 0.8,
+              }}
+            >
+              Current Booking
+            </p>
 
-            <h2 style={{ margin: "7px 0" }}>{booking.centre}</h2>
+            <h2 style={{ margin: "7px 0" }}>
+              {booking.centre}
+            </h2>
 
             <p style={{ margin: 0 }}>
               {booking.date} • {booking.time}
@@ -358,7 +633,8 @@ function Home({ booking, setPage }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns:
+            "repeat(2, 1fr)",
           gap: "15px",
         }}
       >
@@ -399,7 +675,10 @@ function Home({ booking, setPage }) {
         </button>
       </div>
 
-      <div className="section-header" style={{ marginTop: "25px" }}>
+      <div
+        className="section-header"
+        style={{ marginTop: "25px" }}
+      >
         <h2>AI Recommendation 🤖</h2>
       </div>
 
@@ -411,21 +690,29 @@ function Home({ booking, setPage }) {
           border: "1px solid #ffe082",
         }}
       >
-        <strong>Recommended Centre: Centre B - Salem</strong>
+        <strong>
+          Recommended Centre: Centre B - Salem
+        </strong>
 
         <p style={{ marginBottom: 0 }}>
-          AI predicts approximately <b>18 minutes</b> waiting time
-          based on current queue conditions.
+          AI predicts approximately{" "}
+          <b>18 minutes</b> waiting time based
+          on current queue conditions.
         </p>
       </div>
 
-      <div className="section-header" style={{ marginTop: "25px" }}>
+      <div
+        className="section-header"
+        style={{ marginTop: "25px" }}
+      >
         <h2>Recent Activity</h2>
       </div>
 
       <div className="booking-card">
         <div>
-          <strong>Slot booked successfully</strong>
+          <strong>
+            Slot booked successfully
+          </strong>
           <p>Centre B - Salem</p>
         </div>
 
@@ -448,12 +735,26 @@ function Home({ booking, setPage }) {
    BOOK SLOT
 ========================================================= */
 
-function BookSlot({ booking, setBooking, setPage }) {
-  const [centre, setCentre] = useState("");
+function BookSlot({
+  booking,
+  setBooking,
+  setPage,
+  farmer,
+}) {
+  const [centre, setCentre] = useState(
+    booking.centre || ""
+  );
+
   const [date, setDate] = useState("");
+
   const [time, setTime] = useState("");
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
+
+  const [bookingConfirmed, setBookingConfirmed] =
+    useState(false);
+
   const [error, setError] = useState("");
+
+  const [loading, setLoading] = useState(false);
 
   const centres = [
     {
@@ -476,35 +777,101 @@ function BookSlot({ booking, setBooking, setPage }) {
     },
   ];
 
-  const confirmBooking = () => {
+  /* =======================================================
+     CONFIRM BOOKING
+  ======================================================= */
+
+  const confirmBooking = async () => {
+    setError("");
+
     if (!centre || !date || !time) {
-      setError("Please select centre, date and time.");
+      setError(
+        "Please select centre, date and time."
+      );
       return;
     }
 
-    const formattedDate = new Date(date).toLocaleDateString(
-      "en-IN",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }
-    );
+    if (!farmer?.id) {
+      setError(
+        "Farmer information is missing. Please login again."
+      );
+      return;
+    }
+
+    const formattedDate =
+      new Date(date).toLocaleDateString(
+        "en-IN",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }
+      );
 
     const newToken =
-      "B" + String(Math.floor(Math.random() * 800) + 100);
+      "B" +
+      String(
+        Math.floor(Math.random() * 800) + 100
+      );
 
-    setBooking({
-      centre,
-      date: formattedDate,
-      time,
-      token: newToken,
-      confirmed: true,
-    });
+    setLoading(true);
 
-    setError("");
-    setBookingConfirmed(true);
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/bookings",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            farmer_id: farmer.id,
+            centre: centre,
+            booking_date: formattedDate,
+            booking_time: time,
+            token: newToken,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(
+          data.message ||
+            "Failed to create booking."
+        );
+        setLoading(false);
+        return;
+      }
+
+      setBooking({
+        centre,
+        date: formattedDate,
+        time,
+        token: newToken,
+        confirmed: true,
+      });
+
+      setBookingConfirmed(true);
+      setError("");
+    } catch (error) {
+      console.error(
+        "Booking error:",
+        error
+      );
+
+      setError(
+        "Unable to connect to server."
+      );
+    }
+
+    setLoading(false);
   };
+
+  /* =======================================================
+     BOOKING SUCCESS
+  ======================================================= */
 
   if (bookingConfirmed) {
     return (
@@ -535,7 +902,8 @@ function BookSlot({ booking, setBooking, setPage }) {
           <h1>Booking Confirmed!</h1>
 
           <p className="muted-text">
-            Your procurement slot has been successfully booked.
+            Your procurement slot has been
+            successfully booked.
           </p>
 
           <div
@@ -548,15 +916,18 @@ function BookSlot({ booking, setBooking, setPage }) {
             }}
           >
             <p>
-              <strong>Centre:</strong> {booking.centre}
+              <strong>Centre:</strong>{" "}
+              {booking.centre}
             </p>
 
             <p>
-              <strong>Date:</strong> {booking.date}
+              <strong>Date:</strong>{" "}
+              {booking.date}
             </p>
 
             <p>
-              <strong>Time:</strong> {booking.time}
+              <strong>Time:</strong>{" "}
+              {booking.time}
             </p>
 
             <div
@@ -568,7 +939,9 @@ function BookSlot({ booking, setBooking, setPage }) {
                 borderRadius: "12px",
               }}
             >
-              <small>Your Token Number</small>
+              <small>
+                Your Token Number
+              </small>
 
               <div
                 style={{
@@ -584,7 +957,9 @@ function BookSlot({ booking, setBooking, setPage }) {
 
           <button
             className="primary-button"
-            onClick={() => setPage("bookings")}
+            onClick={() =>
+              setPage("bookings")
+            }
             style={{
               width: "100%",
               marginTop: "20px",
@@ -597,11 +972,18 @@ function BookSlot({ booking, setBooking, setPage }) {
     );
   }
 
+  /* =======================================================
+     BOOKING FORM
+  ======================================================= */
+
   return (
     <div className="page-container">
       <div className="page-heading">
         <h1>Book Procurement Slot</h1>
-        <p>Select your preferred centre, date and time.</p>
+        <p>
+          Select your preferred centre, date
+          and time.
+        </p>
       </div>
 
       <h2>1. Select Centre</h2>
@@ -610,7 +992,9 @@ function BookSlot({ booking, setBooking, setPage }) {
         {centres.map((item) => (
           <button
             key={item.name}
-            onClick={() => setCentre(item.name)}
+            onClick={() =>
+              setCentre(item.name)
+            }
             style={{
               width: "100%",
               textAlign: "left",
@@ -622,17 +1006,23 @@ function BookSlot({ booking, setBooking, setPage }) {
                   ? "2px solid #2e7d32"
                   : "1px solid #ddd",
               background:
-                centre === item.name ? "#f1f8e9" : "white",
+                centre === item.name
+                  ? "#f1f8e9"
+                  : "white",
+                  color: "#222",
               cursor: "pointer",
             }}
           >
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent:
+                  "space-between",
               }}
             >
-              <strong>{item.name}</strong>
+              <strong>
+                {item.name}
+              </strong>
 
               {item.recommendation && (
                 <span
@@ -653,19 +1043,29 @@ function BookSlot({ booking, setBooking, setPage }) {
                 color: "#666",
               }}
             >
-              📍 {item.distance} &nbsp; • &nbsp; ⏱️{" "}
+              📍 {item.distance}
+              &nbsp; • &nbsp; ⏱️{" "}
               {item.wait} wait
             </p>
           </button>
         ))}
       </div>
 
-      <h2 style={{ marginTop: "25px" }}>2. Select Date</h2>
+      <h2 style={{ marginTop: "25px" }}>
+        2. Select Date
+      </h2>
 
       <input
         type="date"
         value={date}
-        onChange={(e) => setDate(e.target.value)}
+        min={
+          new Date()
+            .toISOString()
+            .split("T")[0]
+        }
+        onChange={(e) =>
+          setDate(e.target.value)
+        }
         style={{
           width: "100%",
           padding: "13px",
@@ -675,12 +1075,15 @@ function BookSlot({ booking, setBooking, setPage }) {
         }}
       />
 
-      <h2 style={{ marginTop: "25px" }}>3. Select Time</h2>
+      <h2 style={{ marginTop: "25px" }}>
+        3. Select Time
+      </h2>
 
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
+          gridTemplateColumns:
+            "repeat(2, 1fr)",
           gap: "10px",
         }}
       >
@@ -694,7 +1097,9 @@ function BookSlot({ booking, setBooking, setPage }) {
         ].map((slot) => (
           <button
             key={slot}
-            onClick={() => setTime(slot)}
+            onClick={() =>
+              setTime(slot)
+            }
             style={{
               padding: "13px 8px",
               borderRadius: "10px",
@@ -703,7 +1108,10 @@ function BookSlot({ booking, setBooking, setPage }) {
                   ? "2px solid #2e7d32"
                   : "1px solid #ddd",
               background:
-                time === slot ? "#e8f5e9" : "white",
+                time === slot
+                  ? "#e8f5e9"
+                  : "white",
+                  color: "#222",
               cursor: "pointer",
               fontSize: "13px",
             }}
@@ -714,7 +1122,12 @@ function BookSlot({ booking, setBooking, setPage }) {
       </div>
 
       {error && (
-        <p style={{ color: "#d32f2f", marginTop: "15px" }}>
+        <p
+          style={{
+            color: "#d32f2f",
+            marginTop: "15px",
+          }}
+        >
           {error}
         </p>
       )}
@@ -722,12 +1135,16 @@ function BookSlot({ booking, setBooking, setPage }) {
       <button
         onClick={confirmBooking}
         className="primary-button"
+        disabled={loading}
         style={{
           width: "100%",
           marginTop: "25px",
+          opacity: loading ? 0.7 : 1,
         }}
       >
-        Confirm Booking
+        {loading
+          ? "Confirming..."
+          : "Confirm Booking"}
       </button>
     </div>
   );
@@ -737,80 +1154,48 @@ function BookSlot({ booking, setBooking, setPage }) {
    MY BOOKINGS
 ========================================================= */
 
-function MyBookings({ booking, setPage }) {
+function MyBookings({ booking, setPage, farmer }) {
+  const [bookings, setBookings] = useState([]);
+
+  useEffect(() => {
+    if (!farmer?.id) return;
+    fetch(`http://localhost:5000/api/bookings/${farmer.id}`)
+      .then((response) => response.json())
+      .then((data) => setBookings(Array.isArray(data) ? data : []))
+      .catch((error) => console.error("Failed to fetch bookings:", error));
+  }, [farmer]);
+
   return (
     <div className="page-container">
       <div className="page-heading">
         <h1>My Bookings</h1>
         <p>View your procurement bookings.</p>
       </div>
-
       <div className="booking-card">
         <div>
-          <span
-            style={{
-              background: "#e8f5e9",
-              color: "#2e7d32",
-              padding: "5px 10px",
-              borderRadius: "20px",
-              fontSize: "12px",
-            }}
-          >
-            CONFIRMED
-          </span>
-
+          <span style={{ background: "#e8f5e9", color: "#2e7d32", padding: "5px 10px", borderRadius: "20px", fontSize: "12px" }}>CONFIRMED</span>
           <h2>{booking.centre}</h2>
-
           <p>📅 {booking.date}</p>
-
           <p>⏰ {booking.time}</p>
-
-          <p>
-            🎫 Token: <strong>{booking.token}</strong>
-          </p>
+          <p>🎫 Token: <strong>{booking.token}</strong></p>
         </div>
-
-        <button
-          onClick={() => setPage("queue")}
-          className="primary-button"
-        >
-          Track Queue
-        </button>
+        <button onClick={() => setPage("queue")} className="primary-button">Track Queue</button>
       </div>
-
       <h2 style={{ marginTop: "30px" }}>Booking History</h2>
-
-      <div className="booking-card">
-        <div>
-          <strong>Centre A - Salem</strong>
-          <p>02 Sep 2026 • 09:30 AM</p>
-        </div>
-
-        <span
-          style={{
-            color: "#2e7d32",
-            fontWeight: "bold",
-          }}
-        >
-          Completed
-        </span>
-      </div>
-
-      <div className="booking-card">
-        <div>
-          <strong>Centre B - Salem</strong>
-          <p>28 Aug 2026 • 10:00 AM</p>
-        </div>
-
-        <span
-          style={{
-            color: "#2e7d32",
-            fontWeight: "bold",
-          }}
-        >
-          Completed
-        </span>
-      </div>
+      {bookings.length === 0 ? (
+        <div className="booking-card"><p style={{ margin: 0, color: "#666" }}>No booking history found.</p></div>
+      ) : (
+        bookings.map((item) => (
+          <div className="booking-card" key={item.id}>
+            <div>
+              <strong>{item.centre}</strong>
+              <p>{item.booking_date} • {item.booking_time}</p>
+              <p>🎫 Token: <strong>{item.token}</strong></p>
+            </div>
+            <span style={{ color: "#2e7d32", fontWeight: "bold" }}>{item.status}</span>
+          </div>
+        ))
+      )}
     </div>
   );
 }
@@ -821,21 +1206,40 @@ function MyBookings({ booking, setPage }) {
 
 function Queue({ booking }) {
   const queue = [
-    { token: "B021", farmer: "Farmer 21", status: "Processing" },
-    { token: "B022", farmer: "Farmer 22", status: "Waiting" },
-    { token: "B023", farmer: "Farmer 23", status: "Waiting" },
-    { token: booking.token, farmer: "You", status: "Waiting" },
+    {
+      token: "B021",
+      farmer: "Farmer 21",
+      status: "Processing",
+    },
+    {
+      token: "B022",
+      farmer: "Farmer 22",
+      status: "Waiting",
+    },
+    {
+      token: "B023",
+      farmer: "Farmer 23",
+      status: "Waiting",
+    },
+    {
+      token: booking.token,
+      farmer: "You",
+      status: "Waiting",
+    },
   ];
 
   const yourIndex = queue.findIndex(
-    (item) => item.token === booking.token
+    (item) =>
+      item.token === booking.token
   );
 
   return (
     <div className="page-container">
       <div className="page-heading">
         <h1>Live Queue</h1>
-        <p>Track your position in real time.</p>
+        <p>
+          Track your position in real time.
+        </p>
       </div>
 
       <div
@@ -847,7 +1251,9 @@ function Queue({ booking }) {
           marginBottom: "25px",
         }}
       >
-        <p style={{ margin: 0 }}>Your Token</p>
+        <p style={{ margin: 0 }}>
+          Your Token
+        </p>
 
         <h1
           style={{
@@ -861,7 +1267,11 @@ function Queue({ booking }) {
 
         <p style={{ margin: 0 }}>
           Approximately{" "}
-          <strong>{Math.max(yourIndex, 1) * 12} minutes</strong>{" "}
+          <strong>
+            {Math.max(yourIndex, 1) *
+              12}{" "}
+            minutes
+          </strong>{" "}
           remaining
         </p>
       </div>
@@ -877,11 +1287,13 @@ function Queue({ booking }) {
             gap: "15px",
             padding: "16px",
             background:
-              item.token === booking.token
+              item.token ===
+              booking.token
                 ? "#f1f8e9"
                 : "white",
             border:
-              item.token === booking.token
+              item.token ===
+              booking.token
                 ? "2px solid #2e7d32"
                 : "1px solid #eee",
             borderRadius: "13px",
@@ -905,7 +1317,9 @@ function Queue({ booking }) {
           </div>
 
           <div style={{ flex: 1 }}>
-            <strong>{item.token}</strong>
+            <strong>
+              {item.token}
+            </strong>
 
             <p
               style={{
@@ -922,7 +1336,8 @@ function Queue({ booking }) {
               fontSize: "12px",
               fontWeight: "bold",
               color:
-                item.status === "Processing"
+                item.status ===
+                "Processing"
                   ? "#ef6c00"
                   : "#777",
             }}
@@ -940,11 +1355,15 @@ function Queue({ booking }) {
           borderRadius: "14px",
         }}
       >
-        🤖 <strong>AI Queue Prediction</strong>
+        🤖{" "}
+        <strong>
+          AI Queue Prediction
+        </strong>
 
         <p style={{ marginBottom: 0 }}>
-          Based on current processing speed, your estimated
-          waiting time is around{" "}
+          Based on current processing
+          speed, your estimated waiting
+          time is around{" "}
           <strong>36 minutes</strong>.
         </p>
       </div>
@@ -961,7 +1380,9 @@ function Payments() {
     <div className="page-container">
       <div className="page-heading">
         <h1>Payments</h1>
-        <p>Track your procurement payments.</p>
+        <p>
+          Track your procurement payments.
+        </p>
       </div>
 
       <div
@@ -973,9 +1394,13 @@ function Payments() {
           marginBottom: "25px",
         }}
       >
-        <p style={{ opacity: 0.8 }}>Total Received</p>
+        <p style={{ opacity: 0.8 }}>
+          Total Received
+        </p>
 
-        <h1 style={{ margin: "5px 0" }}>₹12,450</h1>
+        <h1 style={{ margin: "5px 0" }}>
+          ₹12,450
+        </h1>
 
         <p style={{ marginBottom: 0 }}>
           Last payment: 02 Sep 2026
@@ -986,22 +1411,36 @@ function Payments() {
 
       <div className="booking-card">
         <div>
-          <strong>Procurement Payment</strong>
-          <p>02 Sep 2026 • Centre A</p>
+          <strong>
+            Procurement Payment
+          </strong>
+
+          <p>
+            02 Sep 2026 • Centre A
+          </p>
         </div>
 
-        <strong style={{ color: "#2e7d32" }}>
+        <strong
+          style={{ color: "#2e7d32" }}
+        >
           +₹12,450
         </strong>
       </div>
 
       <div className="booking-card">
         <div>
-          <strong>Procurement Payment</strong>
-          <p>25 Aug 2026 • Centre B</p>
+          <strong>
+            Procurement Payment
+          </strong>
+
+          <p>
+            25 Aug 2026 • Centre B
+          </p>
         </div>
 
-        <strong style={{ color: "#2e7d32" }}>
+        <strong
+          style={{ color: "#2e7d32" }}
+        >
           +₹9,850
         </strong>
       </div>
@@ -1014,10 +1453,13 @@ function Payments() {
           borderRadius: "14px",
         }}
       >
-        <strong>Payment Status</strong>
+        <strong>
+          Payment Status
+        </strong>
 
         <p style={{ marginBottom: 0 }}>
-          All recent payments have been successfully processed.
+          All recent payments have been
+          successfully processed.
         </p>
       </div>
     </div>
@@ -1031,93 +1473,162 @@ function Payments() {
 function More({ onLogout }) {
   return (
     <div className="more-page">
-
       <div className="page-title">
         <h1>More</h1>
-        <p>Account and application settings</p>
+        <p>
+          Account and application settings
+        </p>
       </div>
 
       <div className="more-menu">
-
         <button className="more-item">
-          <span className="more-icon">👤</span>
+          <span className="more-icon">
+            👤
+          </span>
+
           <div>
             <h3>My Profile</h3>
-            <p>View and edit your farmer profile</p>
+            <p>
+              View and edit your farmer
+              profile
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">⚙️</span>
+          <span className="more-icon">
+            ⚙️
+          </span>
+
           <div>
             <h3>Settings</h3>
-            <p>Manage your application settings</p>
+            <p>
+              Manage your application
+              settings
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">📊</span>
+          <span className="more-icon">
+            📊
+          </span>
+
           <div>
             <h3>Dashboard</h3>
-            <p>View procurement activity and statistics</p>
+            <p>
+              View procurement activity
+              and statistics
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">📄</span>
+          <span className="more-icon">
+            📄
+          </span>
+
           <div>
             <h3>Documents</h3>
-            <p>View your procurement documents</p>
+            <p>
+              View your procurement
+              documents
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">🔔</span>
+          <span className="more-icon">
+            🔔
+          </span>
+
           <div>
             <h3>Notifications</h3>
-            <p>View important alerts and updates</p>
+            <p>
+              View important alerts and
+              updates
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">❓</span>
+          <span className="more-icon">
+            ❓
+          </span>
+
           <div>
             <h3>Help & Support</h3>
-            <p>Get help with SmartProcure</p>
+            <p>
+              Get help with SmartProcure
+            </p>
           </div>
-          <span className="arrow">›</span>
+
+          <span className="arrow">
+            ›
+          </span>
         </button>
 
         <button className="more-item">
-          <span className="more-icon">🌐</span>
+          <span className="more-icon">
+            🌐
+          </span>
+
           <div>
             <h3>Language</h3>
-            <p>Choose your preferred language</p>
+            <p>
+              Choose your preferred
+              language
+            </p>
           </div>
-          <span className="arrow">›</span>
-        </button>
 
+          <span className="arrow">
+            ›
+          </span>
+        </button>
       </div>
 
-      <button className="logout-button" onClick={onLogout}>
+      <button
+        className="logout-button"
+        onClick={onLogout}
+      >
         🚪 Logout
       </button>
-
     </div>
   );
 }
+
 /* =========================================================
    PROCUREMENT CENTRE DASHBOARD
 ========================================================= */
 
-function ProcurementCentre({ onLogout }) {
-  const [processingStep, setProcessingStep] = useState(1);
-  const [currentToken, setCurrentToken] = useState("B021");
+function ProcurementCentre({
+  onLogout,
+}) {
+  const [processingStep, setProcessingStep] =
+    useState(1);
+
+  const [currentToken, setCurrentToken] =
+    useState("B021");
 
   const steps = [
     "Arrival",
@@ -1127,22 +1638,47 @@ function ProcurementCentre({ onLogout }) {
   ];
 
   const queue = [
-    { token: "B021", name: "Ramesh", crop: "Paddy" },
-    { token: "B022", name: "Suresh", crop: "Paddy" },
-    { token: "B023", name: "Kumar", crop: "Wheat" },
-    { token: "B024", name: "Murugan", crop: "Paddy" },
+    {
+      token: "B021",
+      name: "Ramesh",
+      crop: "Paddy",
+    },
+    {
+      token: "B022",
+      name: "Suresh",
+      crop: "Paddy",
+    },
+    {
+      token: "B023",
+      name: "Kumar",
+      crop: "Wheat",
+    },
+    {
+      token: "B024",
+      name: "Murugan",
+      crop: "Paddy",
+    },
   ];
 
   const nextStep = () => {
     if (processingStep < 4) {
-      setProcessingStep(processingStep + 1);
+      setProcessingStep(
+        processingStep + 1
+      );
     }
   };
 
   const callNext = () => {
-    const number = parseInt(currentToken.substring(1)) + 1;
+    const number =
+      parseInt(
+        currentToken.substring(1)
+      ) + 1;
 
-    setCurrentToken("B" + String(number).padStart(3, "0"));
+    setCurrentToken(
+      "B" +
+        String(number).padStart(3, "0")
+    );
+
     setProcessingStep(1);
   };
 
@@ -1170,16 +1706,26 @@ function ProcurementCentre({ onLogout }) {
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent:
+                "space-between",
               alignItems: "center",
             }}
           >
             <div>
-              <p style={{ margin: 0, opacity: 0.8 }}>
+              <p
+                style={{
+                  margin: 0,
+                  opacity: 0.8,
+                }}
+              >
                 Procurement Centre
               </p>
 
-              <h1 style={{ margin: "5px 0" }}>
+              <h1
+                style={{
+                  margin: "5px 0",
+                }}
+              >
                 Centre B - Salem
               </h1>
             </div>
@@ -1187,9 +1733,11 @@ function ProcurementCentre({ onLogout }) {
             <button
               onClick={onLogout}
               style={{
-                background: "rgba(255,255,255,0.15)",
+                background:
+                  "rgba(255,255,255,0.15)",
                 color: "white",
-                border: "1px solid rgba(255,255,255,0.4)",
+                border:
+                  "1px solid rgba(255,255,255,0.4)",
                 padding: "9px 15px",
                 borderRadius: "8px",
                 cursor: "pointer",
@@ -1217,29 +1765,65 @@ function ProcurementCentre({ onLogout }) {
           }}
         >
           {[
-            ["📅", "42", "Today's Bookings"],
-            ["⏳", "8", "Waiting"],
-            ["🎫", currentToken, "Current Token"],
-            ["✓", "34", "Completed"],
-          ].map(([icon, value, label]) => (
-            <div
-              key={label}
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "15px",
-                boxShadow: "0 3px 12px rgba(0,0,0,0.05)",
-              }}
-            >
-              <div style={{ fontSize: "25px" }}>{icon}</div>
+            [
+              "📅",
+              "42",
+              "Today's Bookings",
+            ],
+            [
+              "⏳",
+              "8",
+              "Waiting",
+            ],
+            [
+              "🎫",
+              currentToken,
+              "Current Token",
+            ],
+            [
+              "✓",
+              "34",
+              "Completed",
+            ],
+          ].map(
+            ([icon, value, label]) => (
+              <div
+                key={label}
+                style={{
+                  background: "white",
+                  padding: "20px",
+                  borderRadius: "15px",
+                  boxShadow:
+                    "0 3px 12px rgba(0,0,0,0.05)",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "25px",
+                  }}
+                >
+                  {icon}
+                </div>
 
-              <h2 style={{ margin: "8px 0" }}>{value}</h2>
+                <h2
+                  style={{
+                    margin: "8px 0",
+                  }}
+                >
+                  {value}
+                </h2>
 
-              <p style={{ margin: 0, color: "#666" }}>
-                {label}
-              </p>
-            </div>
-          ))}
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#666",
+                  }}
+                >
+                  {label}
+                </p>
+              </div>
+            )
+          )}
         </div>
 
         <div
@@ -1251,6 +1835,8 @@ function ProcurementCentre({ onLogout }) {
             marginTop: "25px",
           }}
         >
+          {/* CURRENT FARMER */}
+
           <div
             style={{
               background: "white",
@@ -1267,7 +1853,9 @@ function ProcurementCentre({ onLogout }) {
                 borderRadius: "12px",
               }}
             >
-              <p style={{ margin: 0 }}>Token</p>
+              <p style={{ margin: 0 }}>
+                Token
+              </p>
 
               <h1
                 style={{
@@ -1282,48 +1870,63 @@ function ProcurementCentre({ onLogout }) {
               <p>Crop: Paddy</p>
             </div>
 
-            <h3 style={{ marginTop: "25px" }}>
+            <h3
+              style={{
+                marginTop: "25px",
+              }}
+            >
               Processing Progress
             </h3>
 
-            {steps.map((step, index) => (
-              <div
-                key={step}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginBottom: "12px",
-                }}
-              >
+            {steps.map(
+              (step, index) => (
                 <div
+                  key={step}
                   style={{
-                    width: "30px",
-                    height: "30px",
-                    borderRadius: "50%",
-                    background:
-                      index + 1 <= processingStep
-                        ? "#2e7d32"
-                        : "#ddd",
-                    color:
-                      index + 1 <= processingStep
-                        ? "white"
-                        : "#666",
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    alignItems:
+                      "center",
+                    gap: "10px",
+                    marginBottom:
+                      "12px",
                   }}
                 >
-                  {index + 1}
-                </div>
+                  <div
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius:
+                        "50%",
+                      background:
+                        index + 1 <=
+                        processingStep
+                          ? "#2e7d32"
+                          : "#ddd",
+                      color:
+                        index + 1 <=
+                        processingStep
+                          ? "white"
+                          : "#666",
+                      display: "flex",
+                      alignItems:
+                        "center",
+                      justifyContent:
+                        "center",
+                    }}
+                  >
+                    {index + 1}
+                  </div>
 
-                <span>{step}</span>
-              </div>
-            ))}
+                  <span>{step}</span>
+                </div>
+              )
+            )}
 
             <button
               onClick={nextStep}
-              disabled={processingStep === 4}
+              disabled={
+                processingStep === 4
+              }
               className="primary-button"
               style={{
                 width: "100%",
@@ -1342,7 +1945,8 @@ function ProcurementCentre({ onLogout }) {
                 width: "100%",
                 marginTop: "10px",
                 padding: "12px",
-                border: "1px solid #2e7d32",
+                border:
+                  "1px solid #2e7d32",
                 borderRadius: "8px",
                 background: "white",
                 color: "#2e7d32",
@@ -1354,6 +1958,8 @@ function ProcurementCentre({ onLogout }) {
             </button>
           </div>
 
+          {/* AI QUEUE */}
+
           <div
             style={{
               background: "white",
@@ -1361,7 +1967,9 @@ function ProcurementCentre({ onLogout }) {
               borderRadius: "16px",
             }}
           >
-            <h2>AI Queue Prediction 🤖</h2>
+            <h2>
+              AI Queue Prediction 🤖
+            </h2>
 
             <div
               style={{
@@ -1370,27 +1978,46 @@ function ProcurementCentre({ onLogout }) {
                 borderRadius: "12px",
               }}
             >
-              <h3 style={{ marginTop: 0 }}>
+              <h3
+                style={{
+                  marginTop: 0,
+                }}
+              >
                 Expected Peak
               </h3>
 
               <p>
-                Highest queue expected between{" "}
-                <strong>11:00 AM - 1:00 PM</strong>.
+                Highest queue expected
+                between{" "}
+                <strong>
+                  11:00 AM - 1:00 PM
+                </strong>
+                .
               </p>
 
               <p>
                 Predicted waiting time:
-                <strong> 42 minutes</strong>
+                <strong>
+                  {" "}
+                  42 minutes
+                </strong>
               </p>
 
               <p>
                 Recommended action:
-                <strong> Add one processing counter.</strong>
+                <strong>
+                  {" "}
+                  Add one processing
+                  counter.
+                </strong>
               </p>
             </div>
 
-            <h2 style={{ marginTop: "25px" }}>
+            <h2
+              style={{
+                marginTop: "25px",
+              }}
+            >
               Today's Queue
             </h2>
 
@@ -1399,19 +2026,33 @@ function ProcurementCentre({ onLogout }) {
                 key={item.token}
                 style={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  justifyContent:
+                    "space-between",
                   padding: "13px 0",
-                  borderBottom: "1px solid #eee",
+                  borderBottom:
+                    "1px solid #eee",
                 }}
               >
                 <div>
-                  <strong>{item.token}</strong>
-                  <div style={{ color: "#666" }}>
-                    {item.name} • {item.crop}
+                  <strong>
+                    {item.token}
+                  </strong>
+
+                  <div
+                    style={{
+                      color: "#666",
+                    }}
+                  >
+                    {item.name} •{" "}
+                    {item.crop}
                   </div>
                 </div>
 
-                <span style={{ color: "#777" }}>
+                <span
+                  style={{
+                    color: "#777",
+                  }}
+                >
                   Waiting
                 </span>
               </div>
@@ -1427,11 +2068,20 @@ function ProcurementCentre({ onLogout }) {
             marginTop: "20px",
           }}
         >
-          ⚠️ <strong>Centre Alert</strong>
+          ⚠️{" "}
+          <strong>
+            Centre Alert
+          </strong>
 
-          <p style={{ marginBottom: 0 }}>
-            Queue is expected to increase during the afternoon.
-            Consider opening an additional counter.
+          <p
+            style={{
+              marginBottom: 0,
+            }}
+          >
+            Queue is expected to
+            increase during the
+            afternoon. Consider opening
+            an additional counter.
           </p>
         </div>
       </div>
@@ -1443,7 +2093,9 @@ function ProcurementCentre({ onLogout }) {
    DISTRICT ADMIN DASHBOARD
 ========================================================= */
 
-function DistrictAdmin({ onLogout }) {
+function DistrictAdmin({
+  onLogout,
+}) {
   const centreData = [
     {
       name: "Centre A - Salem",
@@ -1499,20 +2151,34 @@ function DistrictAdmin({ onLogout }) {
           <div
             style={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent:
+                "space-between",
               alignItems: "center",
             }}
           >
             <div>
-              <p style={{ margin: 0, opacity: 0.8 }}>
+              <p
+                style={{
+                  margin: 0,
+                  opacity: 0.8,
+                }}
+              >
                 SmartProcure
               </p>
 
-              <h1 style={{ margin: "5px 0" }}>
+              <h1
+                style={{
+                  margin: "5px 0",
+                }}
+              >
                 District Admin Dashboard
               </h1>
 
-              <p style={{ margin: 0 }}>
+              <p
+                style={{
+                  margin: 0,
+                }}
+              >
                 Salem District
               </p>
             </div>
@@ -1520,9 +2186,11 @@ function DistrictAdmin({ onLogout }) {
             <button
               onClick={onLogout}
               style={{
-                background: "rgba(255,255,255,0.15)",
+                background:
+                  "rgba(255,255,255,0.15)",
                 color: "white",
-                border: "1px solid rgba(255,255,255,0.4)",
+                border:
+                  "1px solid rgba(255,255,255,0.4)",
                 padding: "9px 15px",
                 borderRadius: "8px",
                 cursor: "pointer",
@@ -1541,6 +2209,8 @@ function DistrictAdmin({ onLogout }) {
           padding: "0 20px",
         }}
       >
+        {/* STAT CARDS */}
+
         <div
           style={{
             display: "grid",
@@ -1550,29 +2220,66 @@ function DistrictAdmin({ onLogout }) {
           }}
         >
           {[
-            ["🏢", "24", "Procurement Centres"],
-            ["👨‍🌾", "1,248", "Registered Farmers"],
-            ["📅", "186", "Today's Bookings"],
-            ["🌾", "96.4 T", "Today's Procurement"],
-          ].map(([icon, value, label]) => (
-            <div
-              key={label}
-              style={{
-                background: "white",
-                padding: "20px",
-                borderRadius: "15px",
-              }}
-            >
-              <div style={{ fontSize: "25px" }}>{icon}</div>
+            [
+              "🏢",
+              "24",
+              "Procurement Centres",
+            ],
+            [
+              "👨‍🌾",
+              "1,248",
+              "Registered Farmers",
+            ],
+            [
+              "📅",
+              "186",
+              "Today's Bookings",
+            ],
+            [
+              "🌾",
+              "96.4 T",
+              "Today's Procurement",
+            ],
+          ].map(
+            ([icon, value, label]) => (
+              <div
+                key={label}
+                style={{
+                  background: "white",
+                  padding: "20px",
+                  borderRadius: "15px",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "25px",
+                  }}
+                >
+                  {icon}
+                </div>
 
-              <h2 style={{ margin: "8px 0" }}>{value}</h2>
+                <h2
+                  style={{
+                    margin: "8px 0",
+                  }}
+                >
+                  {value}
+                </h2>
 
-              <p style={{ margin: 0, color: "#666" }}>
-                {label}
-              </p>
-            </div>
-          ))}
+                <p
+                  style={{
+                    margin: 0,
+                    color: "#666",
+                  }}
+                >
+                  {label}
+                </p>
+              </div>
+            )
+          )}
         </div>
+
+        {/* TARGET / FORECAST */}
 
         <div
           style={{
@@ -1590,7 +2297,10 @@ function DistrictAdmin({ onLogout }) {
               borderRadius: "16px",
             }}
           >
-            <h2>District Procurement Target</h2>
+            <h2>
+              District Procurement
+              Target
+            </h2>
 
             <div
               style={{
@@ -1612,12 +2322,18 @@ function DistrictAdmin({ onLogout }) {
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent:
+                  "space-between",
                 marginTop: "10px",
               }}
             >
-              <strong>96.4 T</strong>
-              <span>Target: 120 T</span>
+              <strong>
+                96.4 T
+              </strong>
+
+              <span>
+                Target: 120 T
+              </span>
             </div>
           </div>
 
@@ -1628,24 +2344,44 @@ function DistrictAdmin({ onLogout }) {
               borderRadius: "16px",
             }}
           >
-            <h2>AI District Forecast 🤖</h2>
+            <h2>
+              AI District Forecast 🤖
+            </h2>
 
             <p>
-              Today's expected procurement:
-              <strong> 112 T</strong>
+              Today's expected
+              procurement:
+              <strong>
+                {" "}
+                112 T
+              </strong>
             </p>
 
             <p>
-              Tomorrow's predicted demand:
-              <strong> +14%</strong>
+              Tomorrow's predicted
+              demand:
+              <strong>
+                {" "}
+                +14%
+              </strong>
             </p>
 
-            <p style={{ marginBottom: 0 }}>
+            <p
+              style={{
+                marginBottom: 0,
+              }}
+            >
               Recommendation:
-              <strong> Increase staffing at Centre B.</strong>
+              <strong>
+                {" "}
+                Increase staffing at
+                Centre B.
+              </strong>
             </p>
           </div>
         </div>
+
+        {/* TABLE */}
 
         <div
           style={{
@@ -1656,54 +2392,84 @@ function DistrictAdmin({ onLogout }) {
             overflowX: "auto",
           }}
         >
-          <h2>Centre Performance</h2>
+          <h2>
+            Centre Performance
+          </h2>
 
           <table
             style={{
               width: "100%",
-              borderCollapse: "collapse",
+              borderCollapse:
+                "collapse",
               minWidth: "650px",
             }}
           >
             <thead>
               <tr>
-                <th style={tableHeader}>Centre</th>
-                <th style={tableHeader}>Farmers</th>
-                <th style={tableHeader}>Bookings</th>
-                <th style={tableHeader}>Procurement</th>
-                <th style={tableHeader}>Performance</th>
+                <th style={tableHeader}>
+                  Centre
+                </th>
+
+                <th style={tableHeader}>
+                  Farmers
+                </th>
+
+                <th style={tableHeader}>
+                  Bookings
+                </th>
+
+                <th style={tableHeader}>
+                  Procurement
+                </th>
+
+                <th style={tableHeader}>
+                  Performance
+                </th>
               </tr>
             </thead>
 
             <tbody>
-              {centreData.map((centre) => (
-                <tr key={centre.name}>
-                  <td style={tableCell}>
-                    <strong>{centre.name}</strong>
-                  </td>
-
-                  <td style={tableCell}>{centre.farmers}</td>
-
-                  <td style={tableCell}>{centre.bookings}</td>
-
-                  <td style={tableCell}>
-                    {centre.procurement}
-                  </td>
-
-                  <td
-                    style={{
-                      ...tableCell,
-                      color: "#2e7d32",
-                      fontWeight: "bold",
-                    }}
+              {centreData.map(
+                (centre) => (
+                  <tr
+                    key={centre.name}
                   >
-                    {centre.performance}
-                  </td>
-                </tr>
-              ))}
+                    <td style={tableCell}>
+                      <strong>
+                        {centre.name}
+                      </strong>
+                    </td>
+
+                    <td style={tableCell}>
+                      {centre.farmers}
+                    </td>
+
+                    <td style={tableCell}>
+                      {centre.bookings}
+                    </td>
+
+                    <td style={tableCell}>
+                      {centre.procurement}
+                    </td>
+
+                    <td
+                      style={{
+                        ...tableCell,
+                        color: "#2e7d32",
+                        fontWeight:
+                          "bold",
+                      }}
+                    >
+                      {centre.performance}
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>
+
+        {/* ALERTS */}
 
         <div
           style={{
@@ -1721,14 +2487,18 @@ function DistrictAdmin({ onLogout }) {
               borderRadius: "15px",
             }}
           >
-            <h3>⚠️ Alerts</h3>
+            <h3>
+              ⚠️ Alerts
+            </h3>
 
             <p>
-              Centre B queue is above the normal threshold.
+              Centre B queue is above
+              the normal threshold.
             </p>
 
             <p>
-              Two centres require additional staff during
+              Two centres require
+              additional staff during
               afternoon hours.
             </p>
           </div>
@@ -1740,13 +2510,23 @@ function DistrictAdmin({ onLogout }) {
               borderRadius: "15px",
             }}
           >
-            <h3>📈 System Status</h3>
+            <h3>
+              📈 System Status
+            </h3>
 
-            <p>All centres connected.</p>
+            <p>
+              All centres connected.
+            </p>
 
-            <p>Booking system: Operational</p>
+            <p>
+              Booking system:
+              Operational
+            </p>
 
-            <p>AI prediction engine: Active</p>
+            <p>
+              AI prediction engine:
+              Active
+            </p>
           </div>
         </div>
       </div>
@@ -1754,15 +2534,21 @@ function DistrictAdmin({ onLogout }) {
   );
 }
 
+/* =========================================================
+   TABLE STYLES
+========================================================= */
+
 const tableHeader = {
   textAlign: "left",
   padding: "13px",
-  borderBottom: "2px solid #eee",
+  borderBottom:
+    "2px solid #eee",
 };
 
 const tableCell = {
   padding: "13px",
-  borderBottom: "1px solid #eee",
+  borderBottom:
+    "1px solid #eee",
 };
 
 /* =========================================================
@@ -1770,55 +2556,98 @@ const tableCell = {
 ========================================================= */
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showRoleSelection, setShowRoleSelection] =
+  const [isLoggedIn, setIsLoggedIn] =
     useState(false);
+    const [farmer, setFarmer] = useState(null);
 
-  const [role, setRole] = useState("");
+  const [
+    showRoleSelection,
+    setShowRoleSelection,
+  ] = useState(false);
 
-  const [page, setPage] = useState("home");
+  const [role, setRole] =
+    useState("");
 
-  const [booking, setBooking] = useState({
-    centre: "Centre B - Salem",
-    date: "10 Sep 2026",
-    time: "10:30 AM - 11:00 AM",
-    token: "B024",
-    confirmed: true,
-  });
+  const [page, setPage] =
+    useState("home");
 
-  /* LOGIN */
-  if (!isLoggedIn) {
-    return (
-      <Login
-        onLogin={() => {
-          setIsLoggedIn(true);
-          setShowRoleSelection(true);
-        }}
-      />
-    );
-  }
+  const [booking, setBooking] =
+    useState({
+      centre: "Centre B - Salem",
+      date: "10 Sep 2026",
+      time: "10:30 AM - 11:00 AM",
+      token: "B024",
+      confirmed: true,
+    });
 
-  /* ROLE SELECTION */
-  if (showRoleSelection || !role) {
+  /* =======================================================
+     LOGIN
+  ======================================================= */
+if (!isLoggedIn) {
+  return (
+    <Login
+      onLogin={(farmerData) => {
+        setFarmer(farmerData);
+        setIsLoggedIn(true);
+        setPage("home");
+      }}
+      onRegister={() => setPage("register")}
+    />
+  );
+}
+if (page === "register") {
+  return (
+    <Register
+      onBack={() => setPage("home")}
+      onRegistered={() => setPage("home")}
+    />
+  );
+}
+
+  /* =======================================================
+     ROLE SELECTION
+  ======================================================= */
+
+  if (
+    showRoleSelection ||
+    !role
+  ) {
     return (
       <RoleSelection
         onBack={() => {
           setIsLoggedIn(false);
-          setShowRoleSelection(false);
+          setShowRoleSelection(
+            false
+          );
+          setFarmer(null);
         }}
-        onSelectRole={(selectedRole) => {
+        onSelectRole={(
+          selectedRole
+        ) => {
           setRole(selectedRole);
-          setShowRoleSelection(false);
 
-          if (selectedRole === "farmer") {
+          setShowRoleSelection(
+            false
+          );
+
+          if (
+            selectedRole ===
+            "farmer"
+          ) {
             setPage("home");
           }
 
-          if (selectedRole === "centre") {
+          if (
+            selectedRole ===
+            "centre"
+          ) {
             setPage("centre");
           }
 
-          if (selectedRole === "admin") {
+          if (
+            selectedRole ===
+            "admin"
+          ) {
             setPage("admin");
           }
         }}
@@ -1826,12 +2655,18 @@ function App() {
     );
   }
 
-  /* LOGOUT */
+  /* =======================================================
+     LOGOUT
+  ======================================================= */
+
   const logout = () => {
     setIsLoggedIn(false);
     setRole("");
     setPage("home");
-    setShowRoleSelection(false);
+    setShowRoleSelection(
+      false
+    );
+    setFarmer(null);
   };
 
   /* =======================================================
@@ -1839,7 +2674,11 @@ function App() {
   ======================================================= */
 
   if (role === "centre") {
-    return <ProcurementCentre onLogout={logout} />;
+    return (
+      <ProcurementCentre
+        onLogout={logout}
+      />
+    );
   }
 
   /* =======================================================
@@ -1847,7 +2686,11 @@ function App() {
   ======================================================= */
 
   if (role === "admin") {
-    return <DistrictAdmin onLogout={logout} />;
+    return (
+      <DistrictAdmin
+        onLogout={logout}
+      />
+    );
   }
 
   /* =======================================================
@@ -1861,6 +2704,7 @@ function App() {
           <Home
             booking={booking}
             setPage={setPage}
+            farmer={farmer}
           />
         );
 
@@ -1870,6 +2714,7 @@ function App() {
             booking={booking}
             setBooking={setBooking}
             setPage={setPage}
+            farmer={farmer}
           />
         );
 
@@ -1878,41 +2723,61 @@ function App() {
           <MyBookings
             booking={booking}
             setPage={setPage}
+            farmer={farmer}
           />
         );
 
       case "queue":
-        return <Queue booking={booking} />;
+        return (
+          <Queue
+            booking={booking}
+          />
+        );
 
       case "payments":
         return <Payments />;
 
       case "more":
-        return <More onLogout={logout} />;
+        return (
+          <More
+            onLogout={logout}
+          />
+        );
 
       default:
         return (
           <Home
             booking={booking}
             setPage={setPage}
+            farmer={farmer}
           />
         );
     }
   };
 
+  /* =======================================================
+     FARMER APP UI
+  ======================================================= */
+
   return (
     <div className="app">
       <header className="top-header">
         <div>
-          <strong>SmartProcure</strong>
-          <small>Farmer Portal</small>
+          <strong>
+            SmartProcure
+          </strong>
+
+          <small>
+            Farmer Portal
+          </small>
         </div>
 
         <button
           onClick={logout}
           style={{
             border: "none",
-            background: "transparent",
+            background:
+              "transparent",
             cursor: "pointer",
             fontSize: "18px",
           }}
@@ -1922,44 +2787,76 @@ function App() {
         </button>
       </header>
 
-      <main>{renderFarmerPage()}</main>
+      <main>
+        {renderFarmerPage()}
+      </main>
 
       <nav className="bottom-nav">
         <button
-          onClick={() => setPage("home")}
-          className={page === "home" ? "active" : ""}
+          onClick={() =>
+            setPage("home")
+          }
+          className={
+            page === "home"
+              ? "active"
+              : ""
+          }
         >
           <span>🏠</span>
           Home
         </button>
 
         <button
-          onClick={() => setPage("bookings")}
-          className={page === "bookings" ? "active" : ""}
+          onClick={() =>
+            setPage("bookings")
+          }
+          className={
+            page === "bookings"
+              ? "active"
+              : ""
+          }
         >
           <span>📋</span>
           Bookings
         </button>
 
         <button
-          onClick={() => setPage("queue")}
-          className={page === "queue" ? "active" : ""}
+          onClick={() =>
+            setPage("queue")
+          }
+          className={
+            page === "queue"
+              ? "active"
+              : ""
+          }
         >
           <span>🎫</span>
           Queue
         </button>
 
         <button
-          onClick={() => setPage("payments")}
-          className={page === "payments" ? "active" : ""}
+          onClick={() =>
+            setPage("payments")
+          }
+          className={
+            page === "payments"
+              ? "active"
+              : ""
+          }
         >
           <span>💳</span>
           Payments
         </button>
 
         <button
-          onClick={() => setPage("more")}
-          className={page === "more" ? "active" : ""}
+          onClick={() =>
+            setPage("more")
+          }
+          className={
+            page === "more"
+              ? "active"
+              : ""
+          }
         >
           <span>☰</span>
           More
@@ -1968,5 +2865,9 @@ function App() {
     </div>
   );
 }
+
+/* =========================================================
+   EXPORT
+========================================================= */
 
 export default App;
