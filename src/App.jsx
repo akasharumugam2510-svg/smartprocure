@@ -1,5 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
+const API_BASE_URL = "https://smartprocure-production.up.railway.app";
+
 
 /* =========================================================
    LOGIN / REGISTER PAGE
@@ -38,7 +40,7 @@ function Login({ onLogin }) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/farmers/login",
+        `${API_BASE_URL}/api/farmers/login`,
         {
           method: "POST",
           headers: {
@@ -105,7 +107,7 @@ function Login({ onLogin }) {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/farmers/register",
+        `${API_BASE_URL}/api/farmers/register`,
         {
           method: "POST",
           headers: {
@@ -818,7 +820,7 @@ function BookSlot({
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/bookings",
+        `${API_BASE_URL}/api/bookings`,
         {
           method: "POST",
           headers: {
@@ -1159,12 +1161,11 @@ function MyBookings({ booking, setPage, farmer }) {
 
   useEffect(() => {
     if (!farmer?.id) return;
-    fetch(`http://localhost:5000/api/bookings/${farmer.id}`)
+   fetch(`${API_BASE_URL}/api/bookings/${farmer.id}`)
       .then((response) => response.json())
       .then((data) => setBookings(Array.isArray(data) ? data : []))
       .catch((error) => console.error("Failed to fetch bookings:", error));
   }, [farmer]);
-
   return (
     <div className="page-container">
       <div className="page-heading">
