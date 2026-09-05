@@ -1471,153 +1471,1130 @@ function Payments() {
    FARMER MORE
 ========================================================= */
 
-function More({ onLogout }) {
-  return (
-    <div className="more-page">
-      <div className="page-title">
-        <h1>More</h1>
-        <p>
-          Account and application settings
-        </p>
-      </div>
+/* =========================================================
+   FARMER MORE - FULL DETAILS
+========================================================= */
 
-      <div className="more-menu">
-        <button className="more-item">
-          <span className="more-icon">
-            👤
-          </span>
+function More({ onLogout, farmer }) {
+  const [activePage, setActivePage] = useState("menu");
+  const [selectedLanguage, setSelectedLanguage] =
+    useState("English");
 
-          <div>
-            <h3>My Profile</h3>
-            <p>
-              View and edit your farmer
-              profile
-            </p>
-          </div>
+  const farmerName = farmer?.name || "Akash A";
+  const farmerMobile = farmer?.mobile || "9876543211";
+  const farmerVillage =
+    farmer?.village || farmer?.city || "Chennai";
+  const farmerDistrict =
+    farmer?.district || "Chennai";
 
-          <span className="arrow">
-            ›
-          </span>
-        </button>
+  /* ================= BACK BUTTON ================= */
 
-        <button className="more-item">
-          <span className="more-icon">
-            ⚙️
-          </span>
+  const goBack = () => {
+    setActivePage("menu");
+  };
 
-          <div>
-            <h3>Settings</h3>
-            <p>
-              Manage your application
-              settings
-            </p>
-          </div>
+  /* ================= PAGE HEADER ================= */
 
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-
-        <button className="more-item">
-          <span className="more-icon">
-            📊
-          </span>
-
-          <div>
-            <h3>Dashboard</h3>
-            <p>
-              View procurement activity
-              and statistics
-            </p>
-          </div>
-
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-
-        <button className="more-item">
-          <span className="more-icon">
-            📄
-          </span>
-
-          <div>
-            <h3>Documents</h3>
-            <p>
-              View your procurement
-              documents
-            </p>
-          </div>
-
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-
-        <button className="more-item">
-          <span className="more-icon">
-            🔔
-          </span>
-
-          <div>
-            <h3>Notifications</h3>
-            <p>
-              View important alerts and
-              updates
-            </p>
-          </div>
-
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-
-        <button className="more-item">
-          <span className="more-icon">
-            ❓
-          </span>
-
-          <div>
-            <h3>Help & Support</h3>
-            <p>
-              Get help with SmartProcure
-            </p>
-          </div>
-
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-
-        <button className="more-item">
-          <span className="more-icon">
-            🌐
-          </span>
-
-          <div>
-            <h3>Language</h3>
-            <p>
-              Choose your preferred
-              language
-            </p>
-          </div>
-
-          <span className="arrow">
-            ›
-          </span>
-        </button>
-      </div>
-
+  const PageHeader = ({ icon, title, subtitle }) => (
+    <div
+      style={{
+        marginBottom: "22px",
+      }}
+    >
       <button
-        className="logout-button"
-        onClick={onLogout}
+        onClick={goBack}
+        style={{
+          border: "none",
+          background: "transparent",
+          color: "#087a3d",
+          fontSize: "25px",
+          cursor: "pointer",
+          padding: "0",
+          marginBottom: "10px",
+        }}
       >
-        🚪 Logout
+        ←
       </button>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        <span style={{ fontSize: "32px" }}>
+          {icon}
+        </span>
+
+        <div>
+          <h1
+            style={{
+              margin: 0,
+              color: "#087a3d",
+              fontSize: "25px",
+            }}
+          >
+            {title}
+          </h1>
+
+          <p
+            style={{
+              margin: "5px 0 0",
+              color: "#666",
+            }}
+          >
+            {subtitle}
+          </p>
+        </div>
+      </div>
+
+      <p
+        style={{
+          textAlign: "center",
+          marginTop: "15px",
+          color: "#333",
+        }}
+      >
+        SmartProcure
+      </p>
     </div>
   );
-}
 
+  /* =====================================================
+     MENU
+  ===================================================== */
+
+  if (activePage === "menu") {
+    const options = [
+      {
+        icon: "👤",
+        title: "My Profile",
+        description: "View your farmer account details",
+        page: "profile",
+      },
+      {
+        icon: "🌾",
+        title: "My Farm Details",
+        description: "View your farm and agriculture details",
+        page: "farm",
+      },
+      {
+        icon: "📊",
+        title: "Dashboard",
+        description: "View procurement activity summary",
+        page: "dashboard",
+      },
+      {
+        icon: "📄",
+        title: "Documents",
+        description: "View procurement related documents",
+        page: "documents",
+      },
+      {
+        icon: "🔔",
+        title: "Notifications",
+        description: "View booking and procurement updates",
+        page: "notifications",
+      },
+      {
+        icon: "❓",
+        title: "Help & Support",
+        description: "Get help with SmartProcure",
+        page: "help",
+      },
+      {
+        icon: "⚙️",
+        title: "Settings",
+        description: "Manage application settings",
+        page: "settings",
+      },
+      {
+        icon: "🌐",
+        title: "Language",
+        description: "Choose your preferred language",
+        page: "language",
+      },
+    ];
+
+    return (
+      <div className="page-container">
+        <div className="page-heading">
+          <h1>More</h1>
+          <p>
+            Account, support and application settings
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}
+        >
+          {options.map((item) => (
+            <button
+              key={item.page}
+              onClick={() =>
+                setActivePage(item.page)
+              }
+              style={{
+                width: "100%",
+                background: "white",
+                border: "1px solid #e0e0e0",
+                borderRadius: "16px",
+                padding: "16px",
+                display: "flex",
+                alignItems: "center",
+                gap: "14px",
+                textAlign: "left",
+                cursor: "pointer",
+                boxShadow:
+                  "0 3px 12px rgba(0,0,0,0.05)",
+              }}
+            >
+              <span
+                style={{
+                  width: "48px",
+                  height: "48px",
+                  borderRadius: "14px",
+                  background: "#e8f5e9",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "25px",
+                  flexShrink: 0,
+                }}
+              >
+                {item.icon}
+              </span>
+
+              <div style={{ flex: 1 }}>
+                <h3
+                  style={{
+                    margin: 0,
+                    color: "#087a3d",
+                    fontSize: "16px",
+                  }}
+                >
+                  {item.title}
+                </h3>
+
+                <p
+                  style={{
+                    margin: "5px 0 0",
+                    color: "#777",
+                    fontSize: "13px",
+                  }}
+                >
+                  {item.description}
+                </p>
+              </div>
+
+              <span
+                style={{
+                  fontSize: "24px",
+                  color: "#999",
+                }}
+              >
+                ›
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <button
+          className="logout-button"
+          onClick={onLogout}
+          style={{
+            marginTop: "25px",
+            width: "100%",
+          }}
+        >
+          🚪 Logout
+        </button>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     MY PROFILE
+  ===================================================== */
+
+  if (activePage === "profile") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="👤"
+          title="My Profile"
+          subtitle="Your SmartProcure account information"
+        />
+
+        <div
+          style={{
+            background: "white",
+            borderRadius: "18px",
+            padding: "25px",
+            boxShadow:
+              "0 5px 18px rgba(0,0,0,0.06)",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "25px",
+            }}
+          >
+            <div
+              style={{
+                width: "75px",
+                height: "75px",
+                borderRadius: "50%",
+                background: "#e8f5e9",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                margin: "0 auto 12px",
+                fontSize: "38px",
+              }}
+            >
+              👨‍🌾
+            </div>
+
+            <h2
+              style={{
+                margin: 0,
+                color: "#087a3d",
+              }}
+            >
+              {farmerName}
+            </h2>
+
+            <p
+              style={{
+                color: "#777",
+                margin: "5px 0",
+              }}
+            >
+              Registered Farmer
+            </p>
+          </div>
+
+          {[
+            ["👤", "Full Name", farmerName],
+            ["📱", "Mobile Number", farmerMobile],
+            ["📍", "Village / City", farmerVillage],
+            ["🏛️", "District", farmerDistrict],
+            ["🌾", "Account Type", "Farmer"],
+            ["✅", "Account Status", "Active"],
+          ].map(([icon, label, value]) => (
+            <div
+              key={label}
+              style={{
+                padding: "15px 0",
+                borderBottom: "1px solid #eee",
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+              }}
+            >
+              <span style={{ fontSize: "20px" }}>
+                {icon}
+              </span>
+
+              <div style={{ flex: 1 }}>
+                <small style={{ color: "#777" }}>
+                  {label}
+                </small>
+
+                <div
+                  style={{
+                    fontWeight: "700",
+                    marginTop: "3px",
+                  }}
+                >
+                  {value}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     MY FARM DETAILS
+  ===================================================== */
+
+  if (activePage === "farm") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="🌾"
+          title="My Farm Details"
+          subtitle="Your agriculture information"
+        />
+
+        <div
+          style={{
+            background: "white",
+            borderRadius: "18px",
+            padding: "22px",
+            boxShadow:
+              "0 5px 18px rgba(0,0,0,0.06)",
+          }}
+        >
+          <h2
+            style={{
+              color: "#087a3d",
+              marginTop: 0,
+            }}
+          >
+            Farm Information
+          </h2>
+
+          {[
+            ["👨‍🌾", "Farmer", farmerName],
+            ["📍", "Location", farmerVillage],
+            ["🏛️", "District", farmerDistrict],
+            ["🌱", "Primary Crop", "Paddy"],
+            ["📦", "Procurement Category", "Food Grains"],
+            ["🏢", "Preferred Centre", "Centre B - Salem"],
+            ["📅", "Current Season", "Kharif 2026"],
+            ["✅", "Farm Status", "Active"],
+          ].map(([icon, label, value]) => (
+            <div
+              key={label}
+              style={{
+                display: "flex",
+                gap: "12px",
+                padding: "14px 0",
+                borderBottom: "1px solid #eee",
+              }}
+            >
+              <span style={{ fontSize: "21px" }}>
+                {icon}
+              </span>
+
+              <div>
+                <small style={{ color: "#777" }}>
+                  {label}
+                </small>
+
+                <div
+                  style={{
+                    fontWeight: "700",
+                    marginTop: "3px",
+                  }}
+                >
+                  {value}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: "18px",
+            background: "#f1f8e9",
+            padding: "18px",
+            borderRadius: "15px",
+          }}
+        >
+          🌱 <strong>SmartProcure Insight</strong>
+
+          <p
+            style={{
+              marginBottom: 0,
+              color: "#555",
+            }}
+          >
+            Your farm information helps SmartProcure
+            provide suitable procurement centre
+            recommendations.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     DASHBOARD
+  ===================================================== */
+
+  if (activePage === "dashboard") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="📊"
+          title="Dashboard"
+          subtitle="Your procurement activity overview"
+        />
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(2, 1fr)",
+            gap: "12px",
+          }}
+        >
+          {[
+            ["📋", "12", "Total Bookings"],
+            ["✅", "8", "Completed"],
+            ["📅", "3", "Upcoming"],
+            ["❌", "1", "Cancelled"],
+          ].map(([icon, number, label]) => (
+            <div
+              key={label}
+              style={{
+                background: "white",
+                padding: "20px",
+                borderRadius: "16px",
+                textAlign: "center",
+                boxShadow:
+                  "0 4px 15px rgba(0,0,0,0.05)",
+              }}
+            >
+              <div style={{ fontSize: "28px" }}>
+                {icon}
+              </div>
+
+              <h2
+                style={{
+                  margin: "8px 0 3px",
+                  color: "#087a3d",
+                }}
+              >
+                {number}
+              </h2>
+
+              <small style={{ color: "#666" }}>
+                {label}
+              </small>
+            </div>
+          ))}
+        </div>
+
+        <div
+          style={{
+            background: "white",
+            marginTop: "18px",
+            padding: "20px",
+            borderRadius: "16px",
+          }}
+        >
+          <h2
+            style={{
+              marginTop: 0,
+              color: "#087a3d",
+            }}
+          >
+            📈 Procurement Summary
+          </h2>
+
+          <p>Completed procurements: 8</p>
+          <p>Upcoming appointments: 3</p>
+          <p>Cancelled appointments: 1</p>
+
+          <div
+            style={{
+              marginTop: "15px",
+              padding: "15px",
+              background: "#e8f5e9",
+              borderRadius: "12px",
+            }}
+          >
+            🤖 <strong>AI Recommendation</strong>
+
+            <p style={{ marginBottom: 0 }}>
+              Based on your booking history, Centre B
+              is currently recommended for your next
+              procurement visit.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     DOCUMENTS
+  ===================================================== */
+
+  if (activePage === "documents") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="📄"
+          title="Documents"
+          subtitle="Your procurement records"
+        />
+
+        {[
+          [
+            "📄",
+            "Procurement Booking Receipt",
+            "Booking confirmation document",
+            "Available",
+          ],
+          [
+            "📄",
+            "Farmer Registration Details",
+            "Registered farmer information",
+            "Available",
+          ],
+          [
+            "📄",
+            "Procurement Transaction Record",
+            "Previous procurement transactions",
+            "Available",
+          ],
+          [
+            "📄",
+            "Payment Receipt",
+            "Procurement payment records",
+            "Available",
+          ],
+        ].map(
+          ([icon, title, description, status]) => (
+            <div
+              key={title}
+              style={{
+                background: "white",
+                padding: "18px",
+                borderRadius: "15px",
+                marginBottom: "12px",
+                display: "flex",
+                alignItems: "center",
+                gap: "14px",
+                boxShadow:
+                  "0 3px 12px rgba(0,0,0,0.05)",
+              }}
+            >
+              <span style={{ fontSize: "27px" }}>
+                {icon}
+              </span>
+
+              <div style={{ flex: 1 }}>
+                <strong>{title}</strong>
+
+                <p
+                  style={{
+                    margin: "5px 0",
+                    color: "#777",
+                    fontSize: "13px",
+                  }}
+                >
+                  {description}
+                </p>
+              </div>
+
+              <span
+                style={{
+                  background: "#e8f5e9",
+                  color: "#2e7d32",
+                  padding: "5px 9px",
+                  borderRadius: "8px",
+                  fontSize: "11px",
+                  fontWeight: "bold",
+                }}
+              >
+                {status}
+              </span>
+            </div>
+          )
+        )}
+      </div>
+    );
+  }
+
+  /* =====================================================
+     NOTIFICATIONS
+  ===================================================== */
+
+  if (activePage === "notifications") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="🔔"
+          title="Notifications"
+          subtitle="Latest SmartProcure updates"
+        />
+
+        {[
+          [
+            "✅",
+            "Booking Confirmed",
+            "Your procurement slot has been successfully confirmed.",
+            "Recent",
+          ],
+          [
+            "📅",
+            "Upcoming Slot Reminder",
+            "Your procurement appointment is approaching.",
+            "Reminder",
+          ],
+          [
+            "📢",
+            "Procurement Centre Update",
+            "Centre B - Salem has updated its operating schedule.",
+            "Update",
+          ],
+          [
+            "💳",
+            "Payment Processed",
+            "Your recent procurement payment has been processed.",
+            "Payment",
+          ],
+        ].map(
+          ([icon, title, message, type]) => (
+            <div
+              key={title}
+              style={{
+                background: "white",
+                padding: "18px",
+                borderRadius: "15px",
+                marginBottom: "12px",
+                boxShadow:
+                  "0 3px 12px rgba(0,0,0,0.05)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <span style={{ fontSize: "24px" }}>
+                  {icon}
+                </span>
+
+                <strong
+                  style={{
+                    color: "#087a3d",
+                  }}
+                >
+                  {title}
+                </strong>
+
+                <span
+                  style={{
+                    marginLeft: "auto",
+                    fontSize: "11px",
+                    color: "#777",
+                  }}
+                >
+                  {type}
+                </span>
+              </div>
+
+              <p
+                style={{
+                  margin: "10px 0 0 34px",
+                  color: "#555",
+                }}
+              >
+                {message}
+              </p>
+            </div>
+          )
+        )}
+      </div>
+    );
+  }
+
+  /* =====================================================
+     HELP & SUPPORT
+  ===================================================== */
+
+  if (activePage === "help") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="❓"
+          title="Help & Support"
+          subtitle="SmartProcure assistance"
+        />
+
+        <div
+          style={{
+            background: "white",
+            padding: "22px",
+            borderRadius: "18px",
+            boxShadow:
+              "0 5px 18px rgba(0,0,0,0.05)",
+          }}
+        >
+          <h2
+            style={{
+              marginTop: 0,
+              color: "#087a3d",
+            }}
+          >
+            How can we help?
+          </h2>
+
+          {[
+            ["📅", "How to book a procurement slot?"],
+            ["🎫", "How to check my token?"],
+            ["📋", "How to view my bookings?"],
+            ["💳", "How to check payment status?"],
+            ["🏢", "How to select a procurement centre?"],
+          ].map(([icon, question]) => (
+            <button
+              key={question}
+              style={{
+                width: "100%",
+                padding: "15px",
+                marginBottom: "10px",
+                textAlign: "left",
+                background: "#f8faf8",
+                border: "1px solid #eee",
+                borderRadius: "12px",
+                cursor: "pointer",
+                color: "#222",
+              }}
+            >
+              {icon} {question}
+            </button>
+          ))}
+        </div>
+
+        <div
+          style={{
+            marginTop: "18px",
+            background: "#e8f5e9",
+            padding: "20px",
+            borderRadius: "16px",
+          }}
+        >
+          <h3>📞 SmartProcure Support</h3>
+
+          <p>
+            Need additional assistance?
+          </p>
+
+          <p>
+            <strong>Support:</strong>{" "}
+            SmartProcure Help Centre
+          </p>
+
+          <p style={{ marginBottom: 0 }}>
+            Our support team can help with booking,
+            account and procurement related issues.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     SETTINGS
+  ===================================================== */
+
+  if (activePage === "settings") {
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="⚙️"
+          title="Settings"
+          subtitle="Manage your SmartProcure preferences"
+        />
+
+        {[
+          [
+            "🔔",
+            "Notifications",
+            "Receive booking and procurement updates",
+          ],
+          [
+            "📅",
+            "Booking Reminders",
+            "Get reminders before scheduled slots",
+          ],
+          [
+            "🔐",
+            "Account Security",
+            "Your account information is protected",
+          ],
+          [
+            "🌐",
+            "Language",
+            "Current language: " + selectedLanguage,
+          ],
+        ].map(([icon, title, description]) => (
+          <div
+            key={title}
+            style={{
+              background: "white",
+              padding: "18px",
+              borderRadius: "15px",
+              marginBottom: "12px",
+              display: "flex",
+              gap: "14px",
+              alignItems: "center",
+              boxShadow:
+                "0 3px 12px rgba(0,0,0,0.05)",
+            }}
+          >
+            <span style={{ fontSize: "25px" }}>
+              {icon}
+            </span>
+
+            <div>
+              <strong>{title}</strong>
+
+              <p
+                style={{
+                  margin: "5px 0 0",
+                  color: "#777",
+                  fontSize: "13px",
+                }}
+              >
+                {description}
+              </p>
+            </div>
+          </div>
+        ))}
+
+        <div
+          style={{
+            background: "#f1f8e9",
+            padding: "18px",
+            borderRadius: "15px",
+            marginTop: "18px",
+          }}
+        >
+          <strong>🛡️ Privacy & Security</strong>
+
+          <p style={{ marginBottom: 0 }}>
+            SmartProcure keeps your account and
+            procurement information protected.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  /* =====================================================
+     LANGUAGE
+  ===================================================== */
+
+  if (activePage === "language") {
+    const languages = [
+      {
+        name: "English",
+        native: "English",
+        icon: "🇬🇧",
+      },
+      {
+        name: "Tamil",
+        native: "தமிழ்",
+        icon: "🇮🇳",
+      },
+      {
+        name: "Hindi",
+        native: "हिन्दी",
+        icon: "🇮🇳",
+      },
+    ];
+
+    return (
+      <div className="page-container">
+        <PageHeader
+          icon="🌐"
+          title="Language"
+          subtitle="Choose your preferred language"
+        />
+
+        <div
+          style={{
+            background: "white",
+            padding: "22px",
+            borderRadius: "18px",
+            boxShadow:
+              "0 5px 18px rgba(0,0,0,0.05)",
+          }}
+        >
+          <h2
+            style={{
+              marginTop: 0,
+              color: "#087a3d",
+            }}
+          >
+            Select Language
+          </h2>
+
+          <p style={{ color: "#666" }}>
+            Select one language for the SmartProcure
+            application.
+          </p>
+
+          {/* ENGLISH */}
+          <button
+            onClick={() =>
+              setSelectedLanguage("English")
+            }
+            style={{
+              width: "100%",
+              padding: "18px",
+              marginTop: "12px",
+              borderRadius: "14px",
+              border:
+                selectedLanguage === "English"
+                  ? "2px solid #2e7d32"
+                  : "1px solid #ddd",
+              background:
+                selectedLanguage === "English"
+                  ? "#e8f5e9"
+                  : "white",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+              color: "#222",
+              textAlign: "left",
+            }}
+          >
+            <span style={{ fontSize: "25px" }}>
+              🇬🇧
+            </span>
+
+            <div style={{ flex: 1 }}>
+              <strong>English</strong>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: "#777",
+                }}
+              >
+                English
+              </p>
+            </div>
+
+            {selectedLanguage === "English" && (
+              <span>✓</span>
+            )}
+          </button>
+
+          {/* TAMIL */}
+          <button
+            onClick={() =>
+              setSelectedLanguage("Tamil")
+            }
+            style={{
+              width: "100%",
+              padding: "18px",
+              marginTop: "12px",
+              borderRadius: "14px",
+              border:
+                selectedLanguage === "Tamil"
+                  ? "2px solid #2e7d32"
+                  : "1px solid #ddd",
+              background:
+                selectedLanguage === "Tamil"
+                  ? "#e8f5e9"
+                  : "white",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+              color: "#222",
+              textAlign: "left",
+            }}
+          >
+            <span style={{ fontSize: "25px" }}>
+              🇮🇳
+            </span>
+
+            <div style={{ flex: 1 }}>
+              <strong>Tamil</strong>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: "#777",
+                }}
+              >
+                தமிழ்
+              </p>
+            </div>
+
+            {selectedLanguage === "Tamil" && (
+              <span>✓</span>
+            )}
+          </button>
+
+          {/* HINDI */}
+          <button
+            onClick={() =>
+              setSelectedLanguage("Hindi")
+            }
+            style={{
+              width: "100%",
+              padding: "18px",
+              marginTop: "12px",
+              borderRadius: "14px",
+              border:
+                selectedLanguage === "Hindi"
+                  ? "2px solid #2e7d32"
+                  : "1px solid #ddd",
+              background:
+                selectedLanguage === "Hindi"
+                  ? "#e8f5e9"
+                  : "white",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "14px",
+              color: "#222",
+              textAlign: "left",
+            }}
+          >
+            <span style={{ fontSize: "25px" }}>
+              🇮🇳
+            </span>
+
+            <div style={{ flex: 1 }}>
+              <strong>Hindi</strong>
+              <p
+                style={{
+                  margin: "4px 0 0",
+                  color: "#777",
+                }}
+              >
+                हिन्दी
+              </p>
+            </div>
+
+            {selectedLanguage === "Hindi" && (
+              <span>✓</span>
+            )}
+          </button>
+
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "15px",
+              background: "#f1f8e9",
+              borderRadius: "12px",
+              textAlign: "center",
+            }}
+          >
+            Selected Language:{" "}
+            <strong>{selectedLanguage}</strong>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
 /* =========================================================
    PROCUREMENT CENTRE DASHBOARD
 ========================================================= */
@@ -2740,9 +3717,10 @@ if (page === "register") {
 
       case "more":
         return (
-          <More
-            onLogout={logout}
-          />
+  <More
+  onLogout={logout}
+  farmer={farmer}
+/>
         );
 
       default:
