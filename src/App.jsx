@@ -1,6 +1,7 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-const API_BASE_URL = "http://127.0.0.1:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://smartprocure-production.up.railway.app";
+
 
 /* =========================================================
    LOGIN / REGISTER PAGE
@@ -80,10 +81,8 @@ function Login({ onLogin }) {
   ======================================================= */
 
   const handleRegister = async () => {
-    console.log("REGISTER BUTTON CLICKED");
     setError("");
     setSuccess("");
-    
 
     if (
       !name ||
@@ -105,10 +104,8 @@ function Login({ onLogin }) {
       setError("Password must contain at least 4 characters.");
       return;
     }
-    console.log("VALIDATION PASSED");
 
     try {
-      console.log("ABOUT TO SEND REQUEST");
       const response = await fetch(
         `${API_BASE_URL}/api/farmers/register`,
         {
@@ -128,7 +125,6 @@ function Login({ onLogin }) {
           }),
         }
       );
-      console.log("FETCH FINISHED");
 
       const data = await response.json();
 
@@ -344,10 +340,11 @@ function Login({ onLogin }) {
         {/* MAIN BUTTON */}
 
         <button
-          onClick={() => {
-    console.log("BUTTON CLICKED");
-    handleRegister();
-          }}
+          onClick={
+            isRegister
+              ? handleRegister
+              : handleLogin
+          }
           className="primary-button"
           style={{
             width: "100%",
@@ -822,9 +819,7 @@ function BookSlot({
     setLoading(true);
 
     try {
-       console.log("SENDING REQUEST TO BACKEND");
       const response = await fetch(
-        
         `${API_BASE_URL}/api/bookings`,
         {
           method: "POST",
@@ -3543,10 +3538,6 @@ function App() {
     useState(false);
     const [farmer, setFarmer] = useState(null);
 
-  const [
-    showRoleSelection,
-    setShowRoleSelection,
-  ] = useState(false);
 
   const [role, setRole] =
     useState("");
@@ -3564,73 +3555,30 @@ function App() {
     });
 
   /* =======================================================
-     LOGIN
+     LOGIN - ROLE COMES FROM BACKEND DATABASE
   ======================================================= */
-if (!isLoggedIn) {
-  return (
-    <Login
-      onLogin={(farmerData) => {
-        setFarmer(farmerData);
-        setIsLoggedIn(true);
-        setPage("home");
-      }}
-      onRegister={() => setPage("register")}
-    />
-  );
-}
-if (page === "register") {
-  return (
-    <Register
-      onBack={() => setPage("home")}
-      onRegistered={() => setPage("home")}
-    />
-  );
-}
-
-  /* =======================================================
-     ROLE SELECTION
-  ======================================================= */
-
-  if (
-    showRoleSelection ||
-    !role
-  ) {
+  if (!isLoggedIn) {
     return (
-      <RoleSelection
-        onBack={() => {
-          setIsLoggedIn(false);
-          setShowRoleSelection(
-            false
-          );
-          setFarmer(null);
-        }}
-        onSelectRole={(
-          selectedRole
-        ) => {
-          setRole(selectedRole);
+      <Login
+        onLogin={(userData) => {
+          const userRole = userData?.role;
 
-          setShowRoleSelection(
-            false
-          );
+          // Never trust a manually selected frontend role.
+          // The backend/database decides the user's role.
+          if (!['farmer', 'procurement', 'admin'].includes(userRole)) {
+            alert("Invalid user role. Please contact the administrator.");
+            return;
+          }
 
-          if (
-            selectedRole ===
-            "farmer"
-          ) {
+          setFarmer(userData);
+          setRole(userRole);
+          setIsLoggedIn(true);
+
+          if (userRole === "farmer") {
             setPage("home");
-          }
-
-          if (
-            selectedRole ===
-            "centre"
-          ) {
+          } else if (userRole === "procurement") {
             setPage("centre");
-          }
-
-          if (
-            selectedRole ===
-            "admin"
-          ) {
+          } else if (userRole === "admin") {
             setPage("admin");
           }
         }}
@@ -3646,9 +3594,6 @@ if (page === "register") {
     setIsLoggedIn(false);
     setRole("");
     setPage("home");
-    setShowRoleSelection(
-      false
-    );
     setFarmer(null);
   };
 
@@ -3656,7 +3601,7 @@ if (page === "register") {
      PROCUREMENT CENTRE
   ======================================================= */
 
-  if (role === "centre") {
+  if (role === "procurement" && farmer?.role === "procurement") {
     return (
       <ProcurementCentre
         onLogout={logout}
@@ -3668,7 +3613,7 @@ if (page === "register") {
      DISTRICT ADMIN
   ======================================================= */
 
-  if (role === "admin") {
+  if (role === "admin" && farmer?.role === "admin") {
     return (
       <DistrictAdmin
         onLogout={logout}
@@ -3679,6 +3624,47 @@ if (page === "register") {
   /* =======================================================
      FARMER PAGES
   ======================================================= */
+
+  // Only users whose database role is farmer can access the farmer portal.
+  if (farmer?.role !== "farmer") {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          background: "#f3f8f1",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            background: "white",
+            padding: "30px",
+            borderRadius: "18px",
+            maxWidth: "450px",
+            width: "100%",
+            boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+          }}
+        >
+          <div style={{ fontSize: "45px" }}>🔒</div>
+          <h2 style={{ color: "#b71c1c" }}>Access Denied</h2>
+          <p style={{ color: "#666" }}>
+            You do not have permission to access the Farmer Portal.
+          </p>
+          <button
+            onClick={logout}
+            className="primary-button"
+            style={{ width: "100%", marginTop: "15px" }}
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const renderFarmerPage = () => {
     switch (page) {
