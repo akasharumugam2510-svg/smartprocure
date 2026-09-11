@@ -1,7 +1,6 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-const API_BASE_URL = "https://smartprocure-production.up.railway.app";
-
+const API_BASE_URL = "http://127.0.0.1:5000";
 
 /* =========================================================
    LOGIN / REGISTER PAGE
@@ -81,8 +80,10 @@ function Login({ onLogin }) {
   ======================================================= */
 
   const handleRegister = async () => {
+    console.log("REGISTER BUTTON CLICKED");
     setError("");
     setSuccess("");
+    
 
     if (
       !name ||
@@ -104,8 +105,10 @@ function Login({ onLogin }) {
       setError("Password must contain at least 4 characters.");
       return;
     }
+    console.log("VALIDATION PASSED");
 
     try {
+      console.log("ABOUT TO SEND REQUEST");
       const response = await fetch(
         `${API_BASE_URL}/api/farmers/register`,
         {
@@ -125,6 +128,7 @@ function Login({ onLogin }) {
           }),
         }
       );
+      console.log("FETCH FINISHED");
 
       const data = await response.json();
 
@@ -340,11 +344,10 @@ function Login({ onLogin }) {
         {/* MAIN BUTTON */}
 
         <button
-          onClick={
-            isRegister
-              ? handleRegister
-              : handleLogin
-          }
+          onClick={() => {
+    console.log("BUTTON CLICKED");
+    handleRegister();
+          }}
           className="primary-button"
           style={{
             width: "100%",
@@ -819,7 +822,9 @@ function BookSlot({
     setLoading(true);
 
     try {
+       console.log("SENDING REQUEST TO BACKEND");
       const response = await fetch(
+        
         `${API_BASE_URL}/api/bookings`,
         {
           method: "POST",

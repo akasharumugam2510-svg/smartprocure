@@ -1,13 +1,21 @@
-
 const express = require("express");
 const cors = require("cors");
 const db = require("./db");
 
 const app = express();
+const PORT = 5000;
 
+// ===============================
+// MIDDLEWARE
+// ===============================
 app.use(cors());
 app.use(express.json());
 
+// Show every request in terminal
+app.use((req, res, next) => {
+    console.log("REQUEST:", req.method, req.url);
+    next();
+});
 
 // ===============================
 // HOME
@@ -18,11 +26,13 @@ app.get("/", (req, res) => {
     });
 });
 
-
 // ===============================
 // FARMER REGISTRATION
 // ===============================
 app.post("/api/farmers/register", (req, res) => {
+
+    console.log("REGISTER API CALLED");
+    console.log("BODY RECEIVED:", req.body);
 
     const {
         name,
@@ -32,6 +42,11 @@ app.post("/api/farmers/register", (req, res) => {
         district
     } = req.body;
 
+    console.log("NAME:", name);
+    console.log("MOBILE:", mobile);
+    console.log("PASSWORD:", password);
+
+    // Validation
     if (!name || !mobile || !password) {
         return res.status(400).json({
             message: "Name, mobile and password are required"
@@ -44,6 +59,8 @@ app.post("/api/farmers/register", (req, res) => {
         VALUES (?, ?, ?, ?, ?)
     `;
 
+    console.log("ABOUT TO INSERT INTO MYSQL");
+
     db.query(
         sql,
         [
@@ -55,9 +72,10 @@ app.post("/api/farmers/register", (req, res) => {
         ],
         (err, result) => {
 
-            if (err) {
+            console.log("MYSQL QUERY FINISHED");
 
-                console.error(err);
+            if (err) {
+                console.error("Registration database error:", err);
 
                 if (err.code === "ER_DUP_ENTRY") {
                     return res.status(409).json({
@@ -66,18 +84,20 @@ app.post("/api/farmers/register", (req, res) => {
                 }
 
                 return res.status(500).json({
-                    message: "Failed to register farmer"
+                    message: "Failed to register farmer",
+                    error: err.message
                 });
             }
 
-            res.status(201).json({
+            console.log("FARMER INSERTED:", result.insertId);
+
+            return res.status(201).json({
                 message: "Farmer registered successfully",
                 farmerId: result.insertId
             });
         }
     );
 });
-
 
 // ===============================
 // FARMER LOGIN
@@ -107,11 +127,7 @@ app.post("/api/farmers/login", (req, res) => {
         (err, result) => {
 
             if (err) {
-
-                console.error(
-                    "Login database error:",
-                    err
-                );
+                console.error("Login database error:", err);
 
                 return res.status(500).json({
                     message: "Database error"
@@ -120,19 +136,17 @@ app.post("/api/farmers/login", (req, res) => {
 
             if (result.length === 0) {
                 return res.status(401).json({
-                    message:
-                        "Invalid mobile number or password"
+                    message: "Invalid mobile number or password"
                 });
             }
 
-            res.json({
+            return res.json({
                 message: "Login successful",
                 farmer: result[0]
             });
         }
     );
 });
-
 
 // ===============================
 // CREATE BOOKING
@@ -155,8 +169,7 @@ app.post("/api/bookings", (req, res) => {
         !token
     ) {
         return res.status(400).json({
-            message:
-                "All booking details are required"
+            message: "All booking details are required"
         });
     }
 
@@ -178,27 +191,20 @@ app.post("/api/bookings", (req, res) => {
         (err, result) => {
 
             if (err) {
-
-                console.error(
-                    "Booking database error:",
-                    err
-                );
+                console.error("Booking database error:", err);
 
                 return res.status(500).json({
-                    message:
-                        "Failed to create booking"
+                    message: "Failed to create booking"
                 });
             }
 
-            res.status(201).json({
-                message:
-                    "Booking created successfully",
+            return res.status(201).json({
+                message: "Booking created successfully",
                 bookingId: result.insertId
             });
         }
     );
 });
-
 
 // ===============================
 // GET FARMER BOOKINGS
@@ -228,29 +234,21 @@ app.get("/api/bookings/:farmerId", (req, res) => {
         (err, results) => {
 
             if (err) {
-
-                console.error(
-                    "Fetch bookings error:",
-                    err
-                );
+                console.error("Fetch bookings error:", err);
 
                 return res.status(500).json({
-                    message:
-                        "Failed to fetch bookings"
+                    message: "Failed to fetch bookings"
                 });
             }
 
-            res.json(results);
+            return res.json(results);
         }
     );
 });
 
-
 // ===============================
 // START SERVER
 // ===============================
-const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`SmartProcure backend running on port ${PORT}`);
 });

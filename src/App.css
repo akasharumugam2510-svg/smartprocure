@@ -18,7 +18,9 @@ html {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #eef7ef;
+   background:
+    linear-gradient(rgba(20, 70, 35, 0.45), rgba(20, 70, 35, 0.45)),
+    url("/images/agriculture-bg.png") center / cover no-repeat fixed;
   color: #17231c;
   line-height: 1.5;
 }
