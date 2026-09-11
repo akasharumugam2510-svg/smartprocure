@@ -3509,18 +3509,22 @@ const tableCell = {
 ========================================================= */
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] =
-    useState(false);
-    const [farmer, setFarmer] = useState(null);
+ const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+);
+
+const [farmer, setFarmer] = useState(() => {
+    const savedFarmer = localStorage.getItem("farmer");
+    return savedFarmer ? JSON.parse(savedFarmer) : null;
+});
 
   const [
     showRoleSelection,
     setShowRoleSelection,
   ] = useState(false);
-
-  const [role, setRole] =
-    useState("");
-
+const [role, setRole] = useState(() => {
+    return localStorage.getItem("role") || "";
+});
   const [page, setPage] =
     useState("home");
 
@@ -3539,11 +3543,19 @@ function App() {
 if (!isLoggedIn) {
   return (
     <Login
-      onLogin={(farmerData) => {
-        setFarmer(farmerData);
-        setIsLoggedIn(true);
-        setPage("home");
-      }}
+     onLogin={(farmerData) => {
+    setFarmer(farmerData);
+    setIsLoggedIn(true);
+
+    const userRole = farmerData?.role || "farmer";
+    setRole(userRole);
+
+    setPage("home");
+
+    localStorage.setItem("farmer", JSON.stringify(farmerData));
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("role", userRole);
+}}
       onRegister={() => setPage("register")}
     />
   );
@@ -3620,6 +3632,9 @@ if (page === "register") {
       false
     );
     setFarmer(null);
+
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("farmer");
   };
 
   /* =======================================================
