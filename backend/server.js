@@ -3,7 +3,7 @@ const cors = require("cors");
 const db = require("./db");
 
 const app = express();
-const PORT = 5000;
+
 
 // ===============================
 // MIDDLEWARE
@@ -245,13 +245,11 @@ app.get("/api/bookings/:farmerId", (req, res) => {
         }
     );
 });
-
-// ===============================
+// =================================
 // START SERVER
-// ===============================
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`SmartProcure backend running on port ${PORT}`);
-});const PORT = process.env.PORT || 5000;
+// =================================
+
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`SmartProcure backend running on port ${PORT}`);
