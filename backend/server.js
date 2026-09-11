@@ -116,9 +116,9 @@ app.post("/api/farmers/login", (req, res) => {
     }
 
     const sql = `
-        SELECT id, name, mobile, village, district
-        FROM farmers
-        WHERE mobile = ? AND password = ?
+       SELECT id, name, mobile, village, district, role
+FROM farmers
+WHERE mobile = ? AND password = ?
     `;
 
     db.query(

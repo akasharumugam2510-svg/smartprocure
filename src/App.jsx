@@ -1,7 +1,8 @@
 import "./App.css";
 import { useState } from "react";
-
-const API_BASE_URL = "http://127.0.0.1:5000";
+const API_BASE_URL =
+    import.meta.env.VITE_API_URL ||
+    "https://smartprocure-production.up.railway.app";
 
 /* =========================================================
    LOGIN / REGISTER PAGE
