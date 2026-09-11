@@ -1,10 +1,6 @@
 /* =========================================================
-   SMARTPROCURE - COMPLETE STYLING
-   ========================================================= */
-
-/* =========================
-   GLOBAL
-   ========================= */
+   SMARTPROCURE / AGRI-ZEN - COMPLETE RESPONSIVE STYLING
+========================================================= */
 
 * {
   margin: 0;
@@ -18,7 +14,7 @@ html {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background: #eef7ef;
+  background: #ffffff;
   color: #17231c;
   line-height: 1.5;
 }
@@ -31,6 +27,7 @@ select {
 
 button {
   -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 
 .app {
@@ -41,24 +38,294 @@ button {
 
 /* =========================================================
    LOGIN PAGE
-   ========================================================= */
+========================================================= */
 
-/* Login headings */
+.login-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  background: #f4f8f5;
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   FARMING IMAGE
+   Desktop / Laptop
+========================================================= */
+
+.farming-section {
+  width: 50%;
+  height: 100vh;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #eaf4ed;
+}
+
+.farming-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  /*
+    IMPORTANT:
+    cover keeps the image proportional.
+    It fills the entire section without stretching.
+  */
+  object-fit: cover;
+
+  /*
+    Change this if you want to show another
+    part of the uploaded image.
+  */
+  object-position: center center;
+}
+
+
+/* =========================================================
+   LOGIN SECTION
+========================================================= */
+
+.login-section {
+  width: 50%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  background: #ffffff;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 20px 35px 30px;
+}
+
+
+/* =========================================================
+   LOGIN LOGO
+========================================================= */
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.login-logo img {
+  width: 150px;
+  height: 95px;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* =========================================================
+   LOGIN TITLE
+========================================================= */
+
+.login-card h2 {
+  margin: 5px 0 8px;
+  text-align: center;
+  color: #075c37;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #777777;
+  font-size: 14px;
+  margin: 0 0 30px;
+}
+
+
+/* =========================================================
+   LOGIN FORM
+========================================================= */
+
+.login-card label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 7px;
+}
+
+.login-input {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 15px;
+  margin-bottom: 18px;
+
+  border: 1px solid #d8dedb;
+  border-radius: 9px;
+
+  background: #f7faf8;
+  color: #17231c;
+
+  font-size: 14px;
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.login-input:focus {
+  border-color: #087a3d;
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(8, 122, 61, 0.08);
+}
+
+.login-input::placeholder {
+  color: #999999;
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+.error-message {
+  color: #d32f2f;
+  background: #fff1f1;
+
+  border-radius: 7px;
+
+  padding: 10px;
+
+  font-size: 13px;
+
+  margin: 0 0 12px;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.success-message {
+  color: #16833a;
+  background: #edf9f1;
+
+  border-radius: 7px;
+
+  padding: 10px;
+
+  font-size: 13px;
+
+  margin: 0 0 12px;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-button {
+  width: 100%;
+  height: 50px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #087a3d;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+
+  margin-top: 5px;
+}
+
+.login-button:hover {
+  background: #056531;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 16px rgba(0, 100, 50, 0.18);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}
+
+
+/* =========================================================
+   SIGN UP / LOGIN SWITCH
+========================================================= */
+
+.switch-account {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 6px;
+
+  margin-top: 25px;
+
+  font-size: 13px;
+  color: #777777;
+}
+
+.switch-account button {
+  border: none;
+  background: transparent;
+
+  color: #087a3d;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  padding: 0;
+}
+
+.switch-account button:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================================================
+   GLOBAL HEADINGS
+========================================================= */
+
 h1,
 h2,
 h3 {
   font-weight: 800;
 }
 
-/* Main SmartProcure title */
 h1 {
   letter-spacing: -0.3px;
 }
 
-/* Login input */
+
+/* =========================================================
+   GLOBAL INPUTS
+========================================================= */
+
 input[type="text"],
 input[type="password"],
-input[type="date"] {
+input[type="date"],
+input[type="tel"] {
   background: #ffffff !important;
   color: #17231c !important;
 }
@@ -70,17 +337,21 @@ input::placeholder {
 
 input:focus {
   outline: none;
+
   border-color: #07863f !important;
-  box-shadow: 0 0 0 3px rgba(7, 134, 63, 0.12);
+
+  box-shadow:
+    0 0 0 3px rgba(7, 134, 63, 0.12);
 }
 
 
 /* =========================================================
    PRIMARY BUTTON
-   ========================================================= */
+========================================================= */
 
 .primary-button {
   width: 100%;
+
   background: linear-gradient(
     135deg,
     #087f3d,
@@ -90,7 +361,9 @@ input:focus {
   color: #ffffff !important;
 
   border: none !important;
+
   padding: 14px 18px;
+
   border-radius: 10px;
 
   font-size: 15px;
@@ -124,7 +397,7 @@ input:focus {
 
 /* =========================================================
    SECONDARY BUTTON
-   ========================================================= */
+========================================================= */
 
 .secondary-button {
   width: 100%;
@@ -142,7 +415,6 @@ input:focus {
   color: #07863f;
 
   font-size: 14px;
-
   font-weight: 800;
 
   cursor: pointer;
@@ -159,7 +431,7 @@ input:focus {
 
 /* =========================================================
    FARMER PAGE CONTAINER
-   ========================================================= */
+========================================================= */
 
 .page-container {
   width: 100%;
@@ -175,7 +447,7 @@ input:focus {
 
 /* =========================================================
    PAGE HEADINGS
-   ========================================================= */
+========================================================= */
 
 .page-heading {
   margin-bottom: 25px;
@@ -185,7 +457,6 @@ input:focus {
   color: #087a3d !important;
 
   font-size: 32px;
-
   font-weight: 900;
 
   margin-bottom: 8px;
@@ -197,14 +468,13 @@ input:focus {
   color: #68736c;
 
   font-size: 15px;
-
   font-weight: 500;
 }
 
 
 /* =========================================================
    WELCOME SECTION
-   ========================================================= */
+========================================================= */
 
 .welcome-section {
   margin-bottom: 25px;
@@ -216,7 +486,6 @@ input:focus {
   color: #087a3d !important;
 
   font-size: 15px;
-
   font-weight: 800;
 
   margin-bottom: 5px;
@@ -226,7 +495,6 @@ input:focus {
   color: #146b2b !important;
 
   font-size: 32px;
-
   font-weight: 900;
 
   margin-bottom: 8px;
@@ -236,20 +504,18 @@ input:focus {
   color: #68736c;
 
   font-size: 15px;
-
   font-weight: 500;
 }
 
 
 /* =========================================================
    SECTION HEADER
-   ========================================================= */
+========================================================= */
 
 .section-header {
   display: flex;
 
   justify-content: space-between;
-
   align-items: center;
 
   margin-bottom: 15px;
@@ -259,14 +525,13 @@ input:focus {
   color: #087a3d !important;
 
   font-size: 22px;
-
   font-weight: 900;
 }
 
 
 /* =========================================================
    CURRENT BOOKING / GREEN CARD
-   ========================================================= */
+========================================================= */
 
 .page-container > div[style*="background: #2e7d32"] {
   box-shadow:
@@ -276,7 +541,7 @@ input:focus {
 
 /* =========================================================
    ACTION CARDS
-   ========================================================= */
+========================================================= */
 
 .action-card {
   background: #ffffff !important;
@@ -335,7 +600,6 @@ input:focus {
   color: #087a3d !important;
 
   font-size: 16px;
-
   font-weight: 900;
 }
 
@@ -343,14 +607,13 @@ input:focus {
   color: #7a847e;
 
   font-size: 12px;
-
   font-weight: 500;
 }
 
 
 /* =========================================================
    BOOKING CARDS
-   ========================================================= */
+========================================================= */
 
 .booking-card {
   background: #ffffff;
@@ -380,7 +643,6 @@ input:focus {
   color: #146b2b !important;
 
   font-size: 21px;
-
   font-weight: 900;
 
   margin: 12px 0;
@@ -390,7 +652,6 @@ input:focus {
   color: #087a3d !important;
 
   font-size: 18px;
-
   font-weight: 900;
 }
 
@@ -409,7 +670,7 @@ input:focus {
 
 /* =========================================================
    CONFIRMED BADGE
-   ========================================================= */
+========================================================= */
 
 .booking-card span[style*="CONFIRMED"] {
   background: #e3f6e8 !important;
@@ -424,7 +685,7 @@ input:focus {
 
 /* =========================================================
    AI RECOMMENDATION
-   ========================================================= */
+========================================================= */
 
 .page-container div[style*="background: #fff8e1"] {
   border: 1px solid #f0d88b !important;
@@ -440,7 +701,7 @@ input:focus {
 
 /* =========================================================
    QUEUE
-   ========================================================= */
+========================================================= */
 
 .page-container h1,
 .page-container h2,
@@ -469,7 +730,7 @@ input:focus {
 
 /* =========================================================
    QUEUE ITEM
-   ========================================================= */
+========================================================= */
 
 .page-container div[style*="borderRadius: \"13px\""] {
   transition: 0.2s ease;
@@ -485,15 +746,7 @@ input:focus {
 
 /* =========================================================
    PAYMENTS
-   ========================================================= */
-
-.page-container h1 {
-  font-weight: 900;
-}
-
-.page-container h2 {
-  font-weight: 900;
-}
+========================================================= */
 
 .page-container div[style*="background: #2e7d32"] h1 {
   color: #ffffff !important;
@@ -506,25 +759,211 @@ input:focus {
 
 /* =========================================================
    MORE PAGE
-   ========================================================= */
+========================================================= */
 
-.page-container button:not(.primary-button) {
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+.more-page {
+  width: 100%;
+
+  max-width: 1000px;
+
+  margin: 0 auto;
+
+  padding: 25px 20px 100px;
+
+  box-sizing: border-box;
 }
 
-.page-container button:not(.primary-button):hover {
-  transform: translateY(-2px);
+
+/* =========================================================
+   MORE PAGE TITLE
+========================================================= */
+
+.page-title {
+  text-align: center;
+
+  margin-bottom: 25px;
+}
+
+.page-title h1 {
+  margin: 0;
+
+  font-size: 32px;
+
+  font-weight: 800;
+
+  color: #087f3f;
+}
+
+.page-title p {
+  margin-top: 8px;
+
+  font-size: 16px;
+
+  color: #55705f;
+}
+
+
+/* =========================================================
+   MORE MENU
+========================================================= */
+
+.more-menu {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+}
+
+
+/* =========================================================
+   MORE ITEM
+========================================================= */
+
+.more-item {
+  width: 100%;
+
+  min-height: 82px;
+
+  display: flex;
+
+  align-items: center;
+
+  padding: 15px 20px;
+
+  background: #ffffff;
+
+  border: 1px solid #dce9df;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  text-align: left;
 
   box-shadow:
-    0 5px 15px rgba(0, 80, 30, 0.08);
+    0 3px 10px rgba(0, 80, 30, 0.08);
+
+  transition: all 0.2s ease;
+}
+
+.more-item:hover {
+  transform: translateY(-2px);
+
+  border-color: #16a34a;
+
+  box-shadow:
+    0 6px 18px rgba(0, 120, 50, 0.15);
+
+  background: #f7fff9;
+}
+
+
+/* =========================================================
+   MORE ICON
+========================================================= */
+
+.more-icon {
+  width: 50px;
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 18px;
+
+  background: #e8f7ec;
+
+  border-radius: 12px;
+
+  font-size: 25px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   MORE TEXT
+========================================================= */
+
+.more-item div {
+  flex: 1;
+}
+
+.more-item h3 {
+  margin: 0 0 5px;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  color: #146b38;
+}
+
+.more-item p {
+  margin: 0;
+
+  font-size: 14px;
+
+  color: #718078;
+}
+
+
+/* =========================================================
+   MORE ARROW
+========================================================= */
+
+.arrow {
+  font-size: 30px;
+
+  font-weight: 300;
+
+  color: #16a34a;
+
+  margin-left: 10px;
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+.logout-button {
+  width: 100%;
+
+  margin-top: 25px;
+
+  padding: 15px;
+
+  border-radius: 12px;
+
+  border: 2px solid #ef4444;
+
+  background: #ffffff;
+
+  color: #dc2626;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #fee2e2;
+
+  transform: translateY(-1px);
 }
 
 
 /* =========================================================
    TOP HEADER
-   ========================================================= */
+========================================================= */
 
 .top-header {
   position: sticky;
@@ -537,12 +976,11 @@ input:focus {
 
   height: 72px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #ffffff,
-      #f4fbf5
-    );
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #f4fbf5
+  );
 
   border-bottom: 1px solid #dce8df;
 
@@ -582,8 +1020,9 @@ input:focus {
 
 .top-header button {
   width: 42px;
-
   height: 42px;
+
+  border: none;
 
   border-radius: 50%;
 
@@ -603,21 +1042,18 @@ input:focus {
 
 /* =========================================================
    BOTTOM NAVIGATION
-   ========================================================= */
+========================================================= */
 
 .bottom-nav {
   position: fixed;
 
   left: 0;
-
   right: 0;
-
   bottom: 0;
 
   height: 75px;
 
-  background:
-    rgba(255, 255, 255, 0.97);
+  background: rgba(255, 255, 255, 0.97);
 
   border-top: 1px solid #dce8df;
 
@@ -687,7 +1123,7 @@ input:focus {
 
 /* =========================================================
    BOOKING FORM
-   ========================================================= */
+========================================================= */
 
 .form-card {
   background: #ffffff;
@@ -746,7 +1182,7 @@ input:focus {
 
 /* =========================================================
    DATE INPUT
-   ========================================================= */
+========================================================= */
 
 input[type="date"] {
   color-scheme: light;
@@ -758,8 +1194,8 @@ input[type="date"] {
 
 
 /* =========================================================
-   CENTRE SELECTION BUTTONS
-   ========================================================= */
+   CENTRE SELECTION
+========================================================= */
 
 .page-container button {
   font-weight: 600;
@@ -771,8 +1207,8 @@ input[type="date"] {
 
 
 /* =========================================================
-   SUCCESS / CONFIRMATION
-   ========================================================= */
+   CONFIRMATION
+========================================================= */
 
 .confirmation-card {
   background: #ffffff;
@@ -793,7 +1229,6 @@ input[type="date"] {
 
 .success-icon {
   width: 70px;
-
   height: 70px;
 
   margin: auto;
@@ -830,15 +1265,14 @@ input[type="date"] {
 
 /* =========================================================
    TOKEN
-   ========================================================= */
+========================================================= */
 
 .token-display {
-  background:
-    linear-gradient(
-      135deg,
-      #effaf2,
-      #e4f6e8
-    );
+  background: linear-gradient(
+    135deg,
+    #effaf2,
+    #e4f6e8
+  );
 
   border: 1px solid #bfe3c8;
 
@@ -872,7 +1306,7 @@ input[type="date"] {
 
 /* =========================================================
    PROCUREMENT CENTRE / ADMIN
-   ========================================================= */
+========================================================= */
 
 table {
   width: 100%;
@@ -907,7 +1341,7 @@ tr:hover td {
 
 /* =========================================================
    DASHBOARD CARDS
-   ========================================================= */
+========================================================= */
 
 .dashboard-card {
   background: #ffffff;
@@ -924,13 +1358,67 @@ tr:hover td {
 
 
 /* =========================================================
-   RESPONSIVE DESIGN
-   ========================================================= */
+   ACCESSIBILITY
+========================================================= */
 
-@media (max-width: 800px) {
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(7, 134, 63, 0.25);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   SMOOTH ANIMATIONS
+========================================================= */
+
+button,
+.booking-card,
+.action-card {
+  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+
+/* =========================================================
+   TABLET - 900px
+========================================================= */
+
+@media (max-width: 900px) {
+
+  /* Login */
+
+  .login-section {
+    padding: 25px;
+  }
+
+  .login-card {
+    padding: 15px 25px 25px;
+  }
+
+
+  /* Image */
+
+  .farming-section {
+    width: 50%;
+    height: 100vh;
+  }
+
+  .farming-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+    object-position: center center;
+  }
+
+
+  /* Pages */
 
   .page-container {
-    padding: 25px 18px;
+    padding: 25px 20px;
   }
 
   .page-heading h1 {
@@ -942,24 +1430,157 @@ tr:hover td {
   }
 
   .top-header {
-    padding: 0 18px;
+    padding: 0 20px;
   }
 
   .bottom-nav {
-    gap: 25px;
+    gap: 30px;
   }
 }
 
 
-@media (max-width: 600px) {
+/* =========================================================
+   MOBILE - 700px
+========================================================= */
 
-  body {
+@media (max-width: 700px) {
+
+  /* =======================================================
+     LOGIN PAGE
+  ======================================================= */
+
+  .login-page {
+    width: 100%;
+
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: visible;
+
+    background: #ffffff;
+  }
+
+
+  /* =======================================================
+     FARMING IMAGE - MOBILE
+  ======================================================= */
+
+  .farming-section {
+    width: 100%;
+
+    /*
+      Responsive height.
+      It changes depending on phone screen width.
+    */
+    height: 52vw;
+
+    min-height: 240px;
+    max-height: 340px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    background: #eaf4ed;
+  }
+
+  .farming-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    /*
+      IMPORTANT:
+      Image will NOT stretch.
+    */
+    object-fit: cover;
+
+    object-position: center center;
+  }
+
+
+  /* =======================================================
+     LOGIN SECTION - MOBILE
+  ======================================================= */
+
+  .login-section {
+    width: 100%;
+
+    min-height: auto;
+
+    padding: 0;
+
+    display: block;
+
+    background: #ffffff;
+  }
+
+  .login-card {
+    width: 100%;
+
+    max-width: none;
+
+    padding: 25px 25px 35px;
+  }
+
+
+  /* =======================================================
+     LOGIN LOGO
+  ======================================================= */
+
+  .login-logo img {
+    width: 125px;
+
+    height: 80px;
+
+    object-fit: contain;
+  }
+
+
+  /* =======================================================
+     LOGIN TITLE
+  ======================================================= */
+
+  .login-card h2 {
+    font-size: 24px;
+  }
+
+  .login-subtitle {
+    margin-bottom: 25px;
+  }
+
+
+  /* =======================================================
+     LOGIN INPUT
+  ======================================================= */
+
+  .login-input {
+    width: 100%;
+
+    height: 47px;
+
     font-size: 14px;
   }
 
-  .app {
-    padding-bottom: 85px;
+
+  /* =======================================================
+     LOGIN BUTTON
+  ======================================================= */
+
+  .login-button {
+    width: 100%;
+
+    height: 50px;
   }
+
+
+  /* =======================================================
+     FARMER PAGE
+  ======================================================= */
 
   .page-container {
     padding: 20px 14px;
@@ -981,6 +1602,11 @@ tr:hover td {
     font-size: 19px;
   }
 
+
+  /* =======================================================
+     ACTION CARDS
+  ======================================================= */
+
   .action-card {
     min-height: 115px;
 
@@ -997,6 +1623,15 @@ tr:hover td {
 
   .action-card small {
     font-size: 11px;
+  }
+
+
+  /* =======================================================
+     BOTTOM NAV
+  ======================================================= */
+
+  .app {
+    padding-bottom: 85px;
   }
 
   .bottom-nav {
@@ -1021,6 +1656,11 @@ tr:hover td {
     font-size: 19px;
   }
 
+
+  /* =======================================================
+     BOOKING
+  ======================================================= */
+
   .booking-card {
     padding: 17px;
   }
@@ -1032,241 +1672,11 @@ tr:hover td {
   .confirmation-card {
     padding: 25px 18px;
   }
-}
 
 
-/* =========================================================
-   SMALL MOBILE
-   ========================================================= */
-
-@media (max-width: 400px) {
-
-  .top-header {
-    height: 65px;
-  }
-
-  .top-header strong {
-    font-size: 18px;
-  }
-
-  .top-header small {
-    font-size: 10px;
-  }
-
-  .page-container {
-    padding: 18px 10px;
-  }
-
-  .welcome-section h1 {
-    font-size: 23px;
-  }
-
-  .page-heading h1 {
-    font-size: 23px;
-  }
-
-  .bottom-nav button {
-    min-width: 48px;
-
-    font-size: 9px;
-  }
-
-  .bottom-nav button span {
-    font-size: 18px;
-  }
-}
-
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 3px solid rgba(7, 134, 63, 0.25);
-
-  outline-offset: 2px;
-}
-
-
-/* =========================================================
-   SMOOTH ANIMATIONS
-   ========================================================= */
-
-button,
-.booking-card,
-.action-card {
-  -webkit-transition: all 0.2s ease;
-
-  transition: all 0.2s ease;
-}
-/* ================================
-   MORE PAGE
-================================ */
-
-.more-page {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 25px 20px 100px;
-  box-sizing: border-box;
-}
-
-/* Page heading */
-
-.page-title {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.page-title h1 {
-  margin: 0;
-  font-size: 32px;
-  font-weight: 800;
-  color: #087f3f;
-}
-
-.page-title p {
-  margin-top: 8px;
-  font-size: 16px;
-  color: #55705f;
-}
-
-/* Menu */
-
-.more-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* Individual menu item */
-
-.more-item {
-  width: 100%;
-  min-height: 82px;
-
-  display: flex;
-  align-items: center;
-
-  padding: 15px 20px;
-
-  background: #ffffff;
-  border: 1px solid #dce9df;
-  border-radius: 14px;
-
-  cursor: pointer;
-
-  text-align: left;
-
-  box-shadow: 0 3px 10px rgba(0, 80, 30, 0.08);
-
-  transition: all 0.2s ease;
-}
-
-/* Hover */
-
-.more-item:hover {
-  transform: translateY(-2px);
-
-  border-color: #16a34a;
-
-  box-shadow: 0 6px 18px rgba(0, 120, 50, 0.15);
-
-  background: #f7fff9;
-}
-
-/* Icon */
-
-.more-icon {
-  width: 50px;
-  height: 50px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  margin-right: 18px;
-
-  background: #e8f7ec;
-
-  border-radius: 12px;
-
-  font-size: 25px;
-}
-
-/* Text */
-
-.more-item div {
-  flex: 1;
-}
-
-.more-item h3 {
-  margin: 0 0 5px;
-
-  font-size: 18px;
-
-  font-weight: 700;
-
-  color: #146b38;
-}
-
-.more-item p {
-  margin: 0;
-
-  font-size: 14px;
-
-  color: #718078;
-}
-
-/* Arrow */
-
-.arrow {
-  font-size: 30px;
-
-  font-weight: 300;
-
-  color: #16a34a;
-
-  margin-left: 10px;
-}
-
-/* Logout */
-
-.logout-button {
-  width: 100%;
-
-  margin-top: 25px;
-
-  padding: 15px;
-
-  border-radius: 12px;
-
-  border: 2px solid #ef4444;
-
-  background: #ffffff;
-
-  color: #dc2626;
-
-  font-size: 17px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  transition: all 0.2s ease;
-}
-
-.logout-button:hover {
-  background: #fee2e2;
-
-  transform: translateY(-1px);
-}
-
-/* Mobile */
-
-@media (max-width: 600px) {
+  /* =======================================================
+     MORE PAGE
+  ======================================================= */
 
   .more-page {
     padding: 20px 12px 100px;
@@ -1301,5 +1711,287 @@ button,
 
   .arrow {
     font-size: 25px;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE - 400px
+========================================================= */
+
+@media (max-width: 400px) {
+
+  /* =======================================================
+     HEADER
+  ======================================================= */
+
+  .top-header {
+    height: 65px;
+
+    padding: 0 14px;
+  }
+
+  .top-header strong {
+    font-size: 18px;
+  }
+
+  .top-header small {
+    font-size: 10px;
+  }
+
+
+  /* =======================================================
+     LOGIN IMAGE - SMALL PHONE
+  ======================================================= */
+
+  .farming-section {
+    width: 100%;
+
+    /*
+      Responsive image height.
+      No fixed desktop size.
+    */
+    height: 58vw;
+
+    min-height: 220px;
+    max-height: 280px;
+
+    overflow: hidden;
+  }
+
+  .farming-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center center;
+  }
+
+
+  /* =======================================================
+     LOGIN
+  ======================================================= */
+
+  .login-card {
+    padding: 22px 20px 30px;
+  }
+
+  .login-card h2 {
+    font-size: 22px;
+  }
+
+  .login-subtitle {
+    font-size: 13px;
+  }
+
+  .login-logo img {
+    width: 115px;
+    height: 75px;
+  }
+
+
+  /* =======================================================
+     PAGE
+  ======================================================= */
+
+  .page-container {
+    padding: 18px 10px;
+  }
+
+  .welcome-section h1 {
+    font-size: 23px;
+  }
+
+  .page-heading h1 {
+    font-size: 23px;
+  }
+
+
+  /* =======================================================
+     BOTTOM NAVIGATION
+  ======================================================= */
+
+  .bottom-nav button {
+    min-width: 48px;
+
+    font-size: 9px;
+  }
+
+  .bottom-nav button span {
+    font-size: 18px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES - 350px
+========================================================= */
+
+@media (max-width: 350px) {
+
+  .farming-section {
+    height: 60vw;
+
+    min-height: 200px;
+  }
+
+  .login-card {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .login-card h2 {
+    font-size: 20px;
+  }
+
+  .login-input {
+    height: 45px;
+
+    font-size: 13px;
+  }
+
+  .login-button {
+    height: 48px;
+
+    font-size: 15px;
+  }
+}
+
+
+/* =========================================================
+   LARGE LAPTOP / DESKTOP
+========================================================= */
+
+@media (min-width: 1200px) {
+
+  .farming-section {
+    width: 50%;
+
+    height: 100vh;
+
+    min-height: 100vh;
+  }
+
+  .farming-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center center;
+  }
+
+  .login-section {
+    width: 50%;
+
+    padding: 50px;
+  }
+
+  .login-card {
+    max-width: 460px;
+  }
+}
+
+
+/* =========================================================
+   EXTRA LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1600px) {
+
+  .farming-section {
+    width: 50vw;
+
+    height: 100vh;
+  }
+
+  .login-section {
+    width: 50vw;
+  }
+
+  .login-card {
+    max-width: 480px;
+  }
+}
+
+
+/* =========================================================
+   LANDSCAPE PHONE
+========================================================= */
+
+@media (max-width: 900px) and (orientation: landscape) {
+
+  .login-page {
+    flex-direction: row;
+
+    min-height: 100vh;
+  }
+
+  .farming-section {
+    width: 50%;
+
+    height: 100vh;
+
+    min-height: 100vh;
+
+    max-height: none;
+  }
+
+  .farming-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    object-position: center center;
+  }
+
+  .login-section {
+    width: 50%;
+
+    min-height: 100vh;
+
+    padding: 20px;
+  }
+
+  .login-card {
+    padding: 10px 20px 20px;
+
+    max-width: 400px;
+  }
+
+  .login-logo {
+    margin-bottom: 5px;
+  }
+
+  .login-logo img {
+    width: 100px;
+
+    height: 65px;
+  }
+
+  .login-card h2 {
+    font-size: 21px;
+  }
+
+  .login-subtitle {
+    margin-bottom: 15px;
+
+    font-size: 12px;
+  }
+
+  .login-input {
+    height: 42px;
+
+    margin-bottom: 12px;
+  }
+
+  .login-button {
+    height: 44px;
+  }
+
+  .switch-account {
+    margin-top: 15px;
   }
 }

@@ -1,7 +1,7 @@
 import "./App.css";
-import { useState, useEffect } from "react";
-const API_BASE_URL = "https://smartprocure-production.up.railway.app";
+import { useState } from "react";
 
+const API_BASE_URL = "http://127.0.0.1:5000";
 
 /* =========================================================
    LOGIN / REGISTER PAGE
@@ -20,9 +20,9 @@ function Login({ onLogin }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  /* =======================================================
+  /* =========================================================
      LOGIN
-  ======================================================= */
+  ========================================================= */
 
   const handleLogin = async () => {
     setError("");
@@ -63,22 +63,17 @@ function Login({ onLogin }) {
       }
 
       setError("");
-
-      /*
-        Login successful.
-
-      */
-
       onLogin(data.farmer);
+
     } catch (error) {
       console.error("Login error:", error);
       setError("Unable to connect to server.");
     }
   };
 
-  /* =======================================================
+  /* =========================================================
      REGISTER
-  ======================================================= */
+  ========================================================= */
 
   const handleRegister = async () => {
     setError("");
@@ -96,12 +91,16 @@ function Login({ onLogin }) {
     }
 
     if (mobile.length !== 10) {
-      setError("Please enter a valid 10-digit mobile number.");
+      setError(
+        "Please enter a valid 10-digit mobile number."
+      );
       return;
     }
 
     if (password.length < 4) {
-      setError("Password must contain at least 4 characters.");
+      setError(
+        "Password must contain at least 4 characters."
+      );
       return;
     }
 
@@ -117,10 +116,7 @@ function Login({ onLogin }) {
             name,
             mobile,
             password,
-
-            // Your MySQL table uses "village"
             village: city,
-
             district,
           }),
         }
@@ -135,276 +131,260 @@ function Login({ onLogin }) {
         return;
       }
 
-      setError("");
-
       setSuccess(
         "Account created successfully. You can now login."
       );
 
-      // Clear registration fields
+      // Clear fields
       setName("");
       setCity("");
       setDistrict("");
       setPassword("");
       setMobile("");
 
-      // Return to login
+      // Switch to login
       setIsRegister(false);
+
     } catch (error) {
       console.error("Registration error:", error);
-      setError("Unable to connect to server.");
+
+      setError(
+        "Unable to connect to server."
+      );
     }
   };
+
+  /* =========================================================
+     LOGIN / REGISTER UI
+  ========================================================= */
+
+  return (
+    <div className="login-page">
+
+      {/* =====================================================
+          LEFT SIDE - EXACT AGRI-ZEN IMAGE
+      ===================================================== */}
+
+      <div className="farming-section">
+
+    <img
+  src="https://drive.google.com/thumbnail?id=1noXdRP1WvYycJQgJ12Q1rUQplg3DJqFc&sz=w1000"
+  alt="SmartProcure"
+  style={{ width: "100%", height: "auto" }}
+/>
+
+      </div>
+
+
+      {/* =====================================================
+          RIGHT SIDE - LOGIN / REGISTER
+      ===================================================== */}
+
+      <div className="login-section">
+
+        <div className="login-card">
+
+          {/* LOGO */}
+          {/* TITLE */}
+
+          <h2>
+            {isRegister
+              ? "Create your account"
+              : "Login to your account"}
+          </h2>
+
+
+          <p className="login-subtitle">
+            {isRegister
+              ? "Register as a farmer to continue"
+              : "Enter your mobile number and password"}
+          </p>
+
+
+          {/* =================================================
+              REGISTER FIELDS
+          ================================================= */}
+
+          {isRegister && (
+            <>
+              <label>
+                Full Name
+              </label>
+
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={name}
+                onChange={(e) =>
+                  setName(e.target.value)
+                }
+                className="login-input"
+              />
+
+
+              <label>
+                City / Village
+              </label>
+
+              <input
+                type="text"
+                placeholder="Enter City / Village"
+                value={city}
+                onChange={(e) =>
+                  setCity(e.target.value)
+                }
+                className="login-input"
+              />
+
+
+              <label>
+                District
+              </label>
+
+              <input
+                type="text"
+                placeholder="Enter district"
+                value={district}
+                onChange={(e) =>
+                  setDistrict(e.target.value)
+                }
+                className="login-input"
+              />
+            </>
+          )}
+
+
+          {/* =================================================
+              MOBILE NUMBER
+          ================================================= */}
+
+          <label>
+            Mobile Number
+          </label>
+
+          <input
+            type="tel"
+            placeholder="Enter 10-digit mobile number"
+            value={mobile}
+            maxLength={10}
+            onChange={(e) => {
+              const value =
+                e.target.value.replace(/\D/g, "");
+
+              setMobile(value);
+            }}
+            className="login-input"
+          />
+
+
+          {/* =================================================
+              PASSWORD
+          ================================================= */}
+
+          <label>
+            Password
+          </label>
+
+          <input
+            type="password"
+            placeholder={
+              isRegister
+                ? "Create password"
+                : "Enter password"
+            }
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            className="login-input"
+          />
+
+
+          {/* =================================================
+              ERROR MESSAGE
+          ================================================= */}
+
+          {error && (
+            <p className="error-message">
+              {error}
+            </p>
+          )}
+
+
+          {/* =================================================
+              SUCCESS MESSAGE
+          ================================================= */}
+
+          {success && (
+            <p className="success-message">
+              {success}
+            </p>
+          )}
+
+
+          {/* =================================================
+              MAIN BUTTON
+          ================================================= */}
+
+          <button
+            type="button"
+            onClick={
+              isRegister
+                ? handleRegister
+                : handleLogin
+            }
+            className="login-button"
+          >
+            {isRegister
+              ? "Create Account"
+              : "Sign In →"}
+          </button>
+
+
+          {/* =================================================
+              LOGIN / REGISTER SWITCH
+          ================================================= */}
+
+          <div className="switch-account">
+
+            <span>
+              {isRegister
+                ? "Already have an account?"
+                : "Don't have an account?"}
+            </span>
+
+            <button
+              type="button"
+              onClick={() => {
+                setIsRegister(!isRegister);
+                setError("");
+                setSuccess("");
+              }}
+            >
+              {isRegister
+                ? "Login"
+                : "Sign Up"}
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+}
+
+
+/* =========================================================
+   LOGIN / REGISTER PAGE
+========================================================= */
 
   /* =======================================================
      LOGIN / REGISTER UI
   ======================================================= */
 
-  return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f3f8f1",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "430px",
-          background: "white",
-          borderRadius: "20px",
-          padding: "32px",
-          boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
-          boxSizing: "border-box",
-        }}
-      >
-        {/* LOGO */}
-
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: "28px",
-          }}
-        >
-          <div
-            style={{
-              width: "70px",
-              height: "70px",
-              borderRadius: "20px",
-              background: "#2e7d32",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "32px",
-              margin: "0 auto 15px",
-            }}
-          >
-            🌾
-          </div>
-
-          <h1
-            style={{
-              margin: 0,
-              color: "#246b2a",
-              fontSize: "30px",
-            }}
-          >
-            SmartProcure
-          </h1>
-
-          <p
-            style={{
-              color: "#666",
-              marginTop: "8px",
-            }}
-          >
-            Smart Agricultural Procurement System
-          </p>
-        </div>
-
-        {/* TITLE */}
-
-        <h2
-          style={{
-            marginBottom: "20px",
-            color: "#087a3d",
-            fontWeight: "800",
-            fontSize: "28px",
-          }}
-        >
-          {isRegister ? "Create Account" : "Login"}
-        </h2>
-
-        {/* REGISTER FIELDS */}
-
-        {isRegister && (
-          <>
-            <label>Full Name</label>
-
-            <input
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              style={inputStyle}
-            />
-
-            <label>City / Village</label>
-
-            <input
-              type="text"
-              placeholder="Enter City / Village"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              style={inputStyle}
-            />
-
-            <label>District</label>
-
-            <input
-              type="text"
-              placeholder="Enter district"
-              value={district}
-              onChange={(e) => setDistrict(e.target.value)}
-              style={inputStyle}
-            />
-          </>
-        )}
-
-        {/* MOBILE */}
-
-        <label>Mobile Number</label>
-
-        <input
-          type="tel"
-          placeholder="Enter 10-digit mobile number"
-          value={mobile}
-          maxLength="10"
-          onChange={(e) => {
-            const value = e.target.value.replace(/\D/g, "");
-            setMobile(value);
-          }}
-          style={inputStyle}
-        />
-
-        {/* PASSWORD */}
-
-        <label>Password</label>
-
-        <input
-          type="password"
-          placeholder={
-            isRegister
-              ? "Create password"
-              : "Enter password"
-          }
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={inputStyle}
-        />
-
-        {/* ERROR */}
-
-        {error && (
-          <p
-            style={{
-              color: "#d32f2f",
-              fontSize: "14px",
-              marginTop: "5px",
-            }}
-          >
-            {error}
-          </p>
-        )}
-
-        {/* SUCCESS */}
-
-        {success && (
-          <p
-            style={{
-              color: "#16833a",
-              fontSize: "14px",
-              marginTop: "5px",
-            }}
-          >
-            {success}
-          </p>
-        )}
-
-        {/* MAIN BUTTON */}
-
-        <button
-          onClick={
-            isRegister
-              ? handleRegister
-              : handleLogin
-          }
-          className="primary-button"
-          style={{
-            width: "100%",
-            marginTop: "8px",
-            padding: "14px",
-            borderRadius: "10px",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          {isRegister
-            ? "Create Account"
-            : "Login"}
-        </button>
-
-        {/* SWITCH */}
-
-        <button
-          onClick={() => {
-            setIsRegister(!isRegister);
-            setError("");
-            setSuccess("");
-          }}
-          style={{
-            width: "100%",
-            marginTop: "12px",
-            padding: "12px",
-            border: "none",
-            background: "transparent",
-            color: "#087a3d",
-            fontWeight: "700",
-            cursor: "pointer",
-          }}
-        >
-          {isRegister
-            ? "Already have an account? Login"
-            : "New farmer? Create Account"}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-/* =========================================================
-   COMMON INPUT STYLE
-========================================================= */
-
-const inputStyle = {
-  width: "100%",
-  padding: "13px",
-  marginTop: "7px",
-  marginBottom: "15px",
-  border: "1px solid #ccc",
-  borderRadius: "10px",
-  boxSizing: "border-box",
-};
-
-/* =========================================================
-   ROLE SELECTION
-========================================================= */
 
 function RoleSelection({ onSelectRole, onBack }) {
   const roles = [
@@ -800,26 +780,20 @@ function BookSlot({
       return;
     }
 
-    const formattedDate =
-      new Date(date).toLocaleDateString(
-        "en-IN",
-        {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }
-      );
+    const formattedDate = date;
 
-    const newToken =
-      "B" +
-      String(
-        Math.floor(Math.random() * 800) + 100
-      );
+const newToken =
+  "B" +
+  String(
+    Math.floor(Math.random() * 800) + 100
+  );
 
     setLoading(true);
 
     try {
+       console.log("SENDING REQUEST TO BACKEND");
       const response = await fetch(
+        
         `${API_BASE_URL}/api/bookings`,
         {
           method: "POST",
